@@ -5,46 +5,45 @@ using RadiusDomain.ValueObjects;
 
 namespace RadiusDomain.UnitTests.EntitiesValidation;
 
-public class UserValidationTests
+public class UserValidationTests : BaseEntityValidationTests<User>
 {
-    private readonly UserValidation _userValidator;
-
-    public UserValidationTests()
+    public UserValidationTests() : base(new UserValidation())
     {
-        _userValidator = new UserValidation();
     }
 
     [Fact]
     public void Username_Empty_Invalid()
     {
-        var user = new User { Username = "" };
-        var actualResult = _userValidator.Validate(user, opt => { opt.IncludeProperties("Username"); });
+        const string property = "Username";
+        var actualResult = RunValidator(new User { Username = "" }, property);
 
         Assert.False(actualResult.IsValid);
         Assert.Single(actualResult.Errors);
-        Assert.Equal(actualResult.Errors[0].ErrorCode, ErrorCatalog.RequiredProperty.Code);
+        Assert.Equal(property, actualResult.Errors[0].PropertyName);
+        Assert.Equal(ErrorCatalog.RequiredProperty.Code, actualResult.Errors[0].ErrorCode);
     }
 
     [Theory]
     [InlineData(65)]
     [InlineData(80)]
-    public void Username_GreaterThan65_Invalid(int length)
+    public void Username_GreaterThan64_Invalid(int length)
     {
-        var user = new User { Username = new string('*', length) };
-        var actualResult = _userValidator.Validate(user, opt => { opt.IncludeProperties("Username"); });
+        const string property = "Username";
+        var actualResult = RunValidator(new User { Username = new string('*', length) }, property);
 
         Assert.False(actualResult.IsValid);
         Assert.Single(actualResult.Errors);
-        Assert.Equal(actualResult.Errors[0].ErrorCode, ErrorCatalog.FieldExceeded.Code);
+        Assert.Equal(property, actualResult.Errors[0].PropertyName);
+        Assert.Equal(ErrorCatalog.FieldExceeded.Code, actualResult.Errors[0].ErrorCode);
     }
 
     [Theory]
     [InlineData(1)]
-    [InlineData(63)]
-    public void Username_GreaterThan0AndLessThan64_Valid(int length)
+    [InlineData(64)]
+    public void Username_GreaterThan0AndLessThanOrEquals64_Valid(int length)
     {
-        var user = new User { Username = new string('*', length) };
-        var actualResult = _userValidator.Validate(user, opt => { opt.IncludeProperties("Username"); });
+        const string property = "Username";
+        var actualResult = RunValidator(new User { Username = new string('*', length) }, property);
 
         Assert.True(actualResult.IsValid);
     }
@@ -52,19 +51,20 @@ public class UserValidationTests
     [Fact]
     public void Attributes_EmptyList_Invalid()
     {
-        var user = new User { Attributes = { } };
-        var actualResult = _userValidator.Validate(user, opt => { opt.IncludeProperties("Attributes"); });
+        const string property = "Attributes";
+        var actualResult = RunValidator(new User { Attributes = { } }, property);
 
         Assert.False(actualResult.IsValid);
         Assert.Single(actualResult.Errors);
-        Assert.Equal(actualResult.Errors[0].ErrorCode, ErrorCatalog.RequiredProperty.Code);
+        Assert.Equal(property, actualResult.Errors[0].PropertyName);
+        Assert.Equal(ErrorCatalog.RequiredProperty.Code, actualResult.Errors[0].ErrorCode);
     }
 
     [Fact]
     public void Attributes_NotEmptyList_Valid()
     {
-        var user = new User { Attributes = { new RadiusAttribute() } };
-        var actualResult = _userValidator.Validate(user, opt => { opt.IncludeProperties("Attributes"); });
+        const string property = "Attributes";
+        var actualResult = RunValidator(new User { Attributes = { new RadiusAttribute() } }, property);
 
         Assert.True(actualResult.IsValid);
     }
