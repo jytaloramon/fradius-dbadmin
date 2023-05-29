@@ -6,5 +6,5 @@ public class User
 
     public List<RadiusAttribute> Attributes { get; set; } = new List<RadiusAttribute>();
 
-    public List<UserGroup>? Groups { get; set; }
+    public List<UserGroup> Groups { get; set; } = new List<UserGroup>();
 }
