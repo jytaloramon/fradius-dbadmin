@@ -2,7 +2,7 @@ using FluentValidation;
 using RadiusDomain.Entities;
 using RadiusDomain.ValueObjects;
 
-namespace RadiusDomain.EntitiesValidation;
+namespace RadiusDomain.Validations;
 
 public class GroupValidation : AbstractValidator<Group>
 {
