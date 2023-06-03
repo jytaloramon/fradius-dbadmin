@@ -9,4 +9,6 @@ public static class ErrorCatalog
     public static readonly ErrorMessage FieldExceeded = new ErrorMessage("1", "field exceeded");
 
     public static readonly ErrorMessage NoMatch = new ErrorMessage("2", "there is no match");
+
+    public static readonly ErrorMessage DuplicateEntity = new ErrorMessage("3", "duplicate entity");
 }

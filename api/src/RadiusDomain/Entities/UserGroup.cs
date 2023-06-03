@@ -2,11 +2,17 @@ namespace RadiusDomain.Entities;
 
 public class UserGroup
 {
-    public int Id { get; set; }
+    public int Id { get; init; }
 
-    public User User { get; set; } = new User();
+    // "Foreign Key"
+    public string UserUsername { get; set; } = "";
 
-    public Group Group { get; set; } = new Group();
+    public User? User { get; set; } = null;
+
+    // "Foreign Key"
+    public string GroupName { get; set; } = "";
+
+    public Group? Group { get; set; } = null;
 
     public int Priority { get; set; }
 }
