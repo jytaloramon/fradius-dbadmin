@@ -1,7 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace RadiusDomain.UnitTests.EntitiesValidation;
+namespace RadiusDomain.UnitTests.Validations;
 
 public abstract class BaseEntityValidationTests<T>
 {

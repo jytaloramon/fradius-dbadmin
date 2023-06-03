@@ -2,7 +2,7 @@ using RadiusDomain.Entities;
 using RadiusDomain.Validations;
 using RadiusDomain.ValueObjects;
 
-namespace RadiusDomain.UnitTests.EntitiesValidation;
+namespace RadiusDomain.UnitTests.Validations;
 
 public class UserGroupValidationTests : BaseEntityValidationTests<UserGroup>
 {
