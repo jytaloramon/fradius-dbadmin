@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using FluentValidation;
 using FluentValidation.Results;
 using RadiusDomain.Entities;
@@ -25,6 +26,6 @@ public abstract class BaseFactory<T>
             .Select(group => new KeyValuePair<string, ErrorMessage[]>(group.Key,
                 group.Select(vf => new ErrorMessage(vf.ErrorCode, vf.ErrorMessage)).ToArray()));
 
-        return new EntityValidationException(new Dictionary<string, ErrorMessage[]>(errors));
+        return new EntityValidationException(new Dictionary<string, ErrorMessage[]>(errors).ToImmutableDictionary());
     }
 }
