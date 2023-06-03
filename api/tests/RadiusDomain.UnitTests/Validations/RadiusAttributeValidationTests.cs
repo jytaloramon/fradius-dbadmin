@@ -2,7 +2,7 @@ using RadiusDomain.Entities;
 using RadiusDomain.Validations;
 using RadiusDomain.ValueObjects;
 
-namespace RadiusDomain.UnitTests.EntitiesValidation;
+namespace RadiusDomain.UnitTests.Validations;
 
 public class RadiusAttributeValidationTests : BaseEntityValidationTests<RadiusAttribute>
 {
@@ -33,6 +33,43 @@ public class RadiusAttributeValidationTests : BaseEntityValidationTests<RadiusAt
     {
         const string property = "Id";
         var actualResult = RunValidator(new RadiusAttribute { Id = id }, property);
+
+        Assert.True(actualResult.IsValid);
+    }
+
+    [Fact]
+    public void Owner_Empty_Invalid()
+    {
+        const string property = "Owner";
+        var actualResult = RunValidator(new RadiusAttribute { Owner = "" }, property);
+
+        Assert.False(actualResult.IsValid);
+        Assert.Single(actualResult.Errors);
+        Assert.Equal(property, actualResult.Errors[0].PropertyName);
+        Assert.Equal(ErrorCatalog.RequiredProperty.Code, actualResult.Errors[0].ErrorCode);
+    }
+
+    [Theory]
+    [InlineData(65)]
+    [InlineData(80)]
+    public void Owner_GreaterThan64_Invalid(int length)
+    {
+        const string property = "Owner";
+        var actualResult = RunValidator(new RadiusAttribute { Owner = new string('*', length) }, property);
+
+        Assert.False(actualResult.IsValid);
+        Assert.Single(actualResult.Errors);
+        Assert.Equal(property, actualResult.Errors[0].PropertyName);
+        Assert.Equal(ErrorCatalog.FieldExceeded.Code, actualResult.Errors[0].ErrorCode);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(64)]
+    public void Owner_GreaterThan0AndLessThanOrEquals64_Valid(int length)
+    {
+        const string property = "Owner";
+        var actualResult = RunValidator(new RadiusAttribute { Owner = new string('*', length) }, property);
 
         Assert.True(actualResult.IsValid);
     }

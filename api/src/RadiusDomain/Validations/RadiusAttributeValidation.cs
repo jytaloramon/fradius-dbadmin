@@ -2,7 +2,7 @@ using FluentValidation;
 using RadiusDomain.Entities;
 using RadiusDomain.ValueObjects;
 
-namespace RadiusDomain.EntitiesValidation;
+namespace RadiusDomain.Validations;
 
 public class RadiusAttributeValidation : AbstractValidator<RadiusAttribute>
 {
@@ -16,6 +16,17 @@ public class RadiusAttributeValidation : AbstractValidator<RadiusAttribute>
                 .WithMessage($"{ErrorCatalog.FieldExceeded.Message}: min (1)");
         });
 
+        RuleSet("Owner", () =>
+        {
+            RuleFor(attr => attr.Owner)
+                .NotEmpty()
+                .WithErrorCode(ErrorCatalog.RequiredProperty.Code)
+                .WithMessage($"{ErrorCatalog.RequiredProperty.Message}: cannot by empty")
+                .MaximumLength(64)
+                .WithErrorCode(ErrorCatalog.FieldExceeded.Code)
+                .WithMessage($"{ErrorCatalog.FieldExceeded.Message}: max (64)");
+        });
+        
         RuleSet("Name", () =>
         {
             RuleFor(attr => attr.Name)
