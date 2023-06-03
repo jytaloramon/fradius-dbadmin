@@ -1,5 +1,5 @@
 using RadiusDomain.Entities;
-using RadiusDomain.EntitiesValidation;
+using RadiusDomain.Validations;
 using RadiusDomain.ValueObjects;
 
 namespace RadiusDomain.UnitTests.EntitiesValidation;

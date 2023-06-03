@@ -1,21 +1,20 @@
-using FluentValidation;
 using RadiusDomain.Entities;
-using RadiusDomain.EntitiesValidation;
+using RadiusDomain.Validations;
 using RadiusDomain.ValueObjects;
 
 namespace RadiusDomain.UnitTests.EntitiesValidation;
 
-public class UserValidationTests : BaseEntityValidationTests<User>
+public class GroupValidationTests : BaseEntityValidationTests<Group>
 {
-    public UserValidationTests() : base(new UserValidation())
+    public GroupValidationTests() : base(new GroupValidation())
     {
     }
 
     [Fact]
-    public void Username_Empty_Invalid()
+    public void Name_Empty_Invalid()
     {
-        const string property = "Username";
-        var actualResult = RunValidator(new User { Username = "" }, property);
+        const string property = "Name";
+        var actualResult = RunValidator(new Group { Name = "" }, property);
 
         Assert.False(actualResult.IsValid);
         Assert.Single(actualResult.Errors);
@@ -26,10 +25,10 @@ public class UserValidationTests : BaseEntityValidationTests<User>
     [Theory]
     [InlineData(65)]
     [InlineData(80)]
-    public void Username_GreaterThan64_Invalid(int length)
+    public void Name_GreaterThan64_Invalid(int length)
     {
-        const string property = "Username";
-        var actualResult = RunValidator(new User { Username = new string('*', length) }, property);
+        const string property = "Name";
+        var actualResult = RunValidator(new Group() { Name = new string('*', length) }, property);
 
         Assert.False(actualResult.IsValid);
         Assert.Single(actualResult.Errors);
@@ -40,10 +39,10 @@ public class UserValidationTests : BaseEntityValidationTests<User>
     [Theory]
     [InlineData(1)]
     [InlineData(64)]
-    public void Username_GreaterThan0AndLessThanOrEquals64_Valid(int length)
+    public void Name_GreaterThan0AndLessThanOrEquals64_Valid(int length)
     {
-        const string property = "Username";
-        var actualResult = RunValidator(new User { Username = new string('*', length) }, property);
+        const string property = "Name";
+        var actualResult = RunValidator(new Group() { Name = new string('*', length) }, property);
 
         Assert.True(actualResult.IsValid);
     }
@@ -52,7 +51,7 @@ public class UserValidationTests : BaseEntityValidationTests<User>
     public void Attributes_EmptyList_Invalid()
     {
         const string property = "Attributes";
-        var actualResult = RunValidator(new User { Attributes = { } }, property);
+        var actualResult = RunValidator(new Group(), property);
 
         Assert.False(actualResult.IsValid);
         Assert.Single(actualResult.Errors);
@@ -64,7 +63,7 @@ public class UserValidationTests : BaseEntityValidationTests<User>
     public void Attributes_NotEmptyList_Valid()
     {
         const string property = "Attributes";
-        var actualResult = RunValidator(new User { Attributes = { new RadiusAttribute() } }, property);
+        var actualResult = RunValidator(new Group() { Attributes = { new RadiusAttribute() } }, property);
 
         Assert.True(actualResult.IsValid);
     }
