@@ -25,7 +25,7 @@ public class RadiusAttributeFactoryTests : BaseFactoryUnitTests<RadiusAttribute>
         var factory = new RadiusAttributeFactory(ValidatorAllInvalid);
 
         var actualErrors = Assert.Throws<EntityValidationException>(() => { factory.Create("*", "*", "*"); });
-        Assert.Equal(3, actualErrors.Errors.Count());
+        Assert.Equal(4, actualErrors.Errors.Count());
     }
 
     [Fact]

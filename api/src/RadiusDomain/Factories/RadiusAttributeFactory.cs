@@ -15,11 +15,14 @@ public class RadiusAttributeFactory : BaseFactory<RadiusAttribute>, IRadiusAttri
         var attribute = new RadiusAttribute { Name = name, Op = op, Value = value };
         var resultValidation = RunValidator(attribute, "Name", "Op", "Value");
 
-        if (!resultValidation.IsValid)
-        {
-            throw CreateEntityException(resultValidation.Errors);
-        }
+        if (resultValidation.IsValid) return attribute;
 
-        return attribute;
+        var errorsPairs = resultValidation.Errors.GroupBy(vf => vf.PropertyName)
+            .Select(vfGp => new KeyValuePair<string, object>(vfGp.Key,
+                vfGp.Select(failure => new ErrorMessage(failure.ErrorCode, failure.ErrorMessage)).ToArray()));
+
+        var pairs = new List<KeyValuePair<string, object>>(errorsPairs) { new KeyValuePair<string, object>("Key", attribute.Name) };
+
+        throw CreateEntityException(pairs);
     }
 }
