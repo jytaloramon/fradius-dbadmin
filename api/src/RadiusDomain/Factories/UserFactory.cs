@@ -15,11 +15,12 @@ public class UserFactory : BaseFactory<User>, IUserFactory
         var user = new User { Username = username, Attributes = attributes, Groups = groups };
         var resultValidation = RunValidator(user, "Username", "Attributes");
 
-        if (!resultValidation.IsValid)
-        {
-            throw CreateEntityException(resultValidation.Errors);
-        }
+        if (resultValidation.IsValid) return user;
 
-        return user;
+        var errorsPairs = resultValidation.Errors.GroupBy(vf => vf.PropertyName)
+            .Select(vfGp => new KeyValuePair<string, object>(vfGp.Key,
+                vfGp.Select(failure => new ErrorMessage(failure.ErrorCode, failure.ErrorMessage)).ToArray()));
+
+        throw CreateEntityException(errorsPairs);
     }
 }
