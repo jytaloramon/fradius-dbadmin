@@ -163,4 +163,15 @@ public class RadiusAttributeValidationTests : BaseEntityValidationTests<RadiusAt
         Assert.Equal(property, actualResult.Errors[0].PropertyName);
         Assert.Equal(ErrorCatalog.FieldExceeded.Code, actualResult.Errors[0].ErrorCode);
     }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(64)]
+    public void Value_GreaterThanOrEquals0AndLessThanOrEquals64_Valid(int length)
+    {
+        const string property = "Value";
+        var actualResult = RunValidator(new RadiusAttribute { Value = new string('*', length) }, property);
+
+        Assert.True(actualResult.IsValid);
+    }
 }
