@@ -5,7 +5,6 @@ using RadiusDomain.Exceptions;
 using RadiusDomain.Factories.Interfaces;
 using RadiusDomain.Repositories.Interfaces;
 using RadiusDomain.UseCases.Interfaces;
-using RadiusDomain.ValueObjects;
 
 namespace RadiusDomain.UseCases;
 
@@ -19,123 +18,71 @@ public class UserUseCases : IUserUseCases
 
     private readonly IUserRepository _userRepository;
 
+    private readonly IGroupRepository _groupRepository;
+
+    private const int MaxTask = 100;
+
     public UserUseCases(IUserFactory userFactory, IRadiusAttributeFactory radiusAttributeFactory,
-        IUserGroupFactory userGroupFactory, IUserRepository userRepository)
+        IUserGroupFactory userGroupFactory, IUserRepository userRepository, IGroupRepository groupRepository)
     {
         _userFactory = userFactory;
         _radiusAttributeFactory = radiusAttributeFactory;
-        _userRepository = userRepository;
         _userGroupFactory = userGroupFactory;
+        _userRepository = userRepository;
+        _groupRepository = groupRepository;
     }
 
-    public void Push(List<UserPushInDto> users)
+    public async Task Push(List<UserPushInDto> users)
     {
         var duplicatesUsers = _searchDuplicatesUsers(users);
 
         if (duplicatesUsers.Any())
         {
-            var errorsSet = duplicatesUsers.Select(username => new KeyValuePair<string, EntityConflictException[]>(
-                username,
-                new[]
-                {
-                    new EntityConflictException(new Dictionary<string, ErrorMessage[]>
-                        { ["key"] = new[] { ErrorCatalog.DuplicateEntity } }.ToImmutableDictionary())
-                }));
+            var errorsSet = duplicatesUsers.Select(username =>
+                new EntityConflictException(new Dictionary<string, string>() { ["Username"] = username }
+                    .ToImmutableDictionary()));
 
-            var errors = new Dictionary<string, EntityConflictException[]>(errorsSet);
-
-            throw new EntitiesConflictException(errors.ToImmutableDictionary());
+            throw new EntitiesConflictException(errorsSet.ToArray());
         }
 
-        var sentinelAttrs = new List<RadiusAttribute> { new RadiusAttribute() };
         var createdUsers = new List<User>();
+        var usersErrors = new List<EntityValidationException>();
 
-        var usersErrors = new Dictionary<string, EntityValidationException[]>();
-
-        foreach (var user in users)
+        Task Run(UserPushInDto u)
         {
-            var userPropertiesErrors = new List<EntityValidationException>();
-
-            var createdAttributes = new List<RadiusAttribute>();
-
-            foreach (var attr in user.Attributes)
-            {
-                try
-                {
-                    var createdAttr = _radiusAttributeFactory.Create(attr.Name, attr.Op, attr.Value);
-                    createdAttr.Owner = user.Username;
-
-                    if (!userPropertiesErrors.Any() && !usersErrors.Any())
-                    {
-                        createdAttributes.Add(createdAttr);
-                    }
-                }
-                catch (EntityValidationException e)
-                {
-                    userPropertiesErrors.Add(e);
-                }
-            }
-
-            var createdUserGroups = new List<UserGroup>();
-
-            foreach (var uGp in user.Groups)
-            {
-                Group? group = new Group();
-
-                if (group == null)
-                {
-                    var errorsSet = new Dictionary<string, ErrorMessage>()
-                    {
-                        ["Name"]
-                    };
-                    
-                    var exception = new EntityValidationException();
-                    continue;
-                }
-                
-                try
-                {
-                    var createdUserGroup = _userGroupFactory.Create(user.Username, group.Name, uGp.Priority);
-
-                    if (!userPropertiesErrors.Any() && !usersErrors.Any())
-                    {
-                        createdUserGroups.Add(createdUserGroup);
-                    }
-                }
-                catch (EntityValidationException e)
-                {
-                    userPropertiesErrors.Add(e);
-                }
-            }
-
             try
             {
-                var userCreated = _userFactory.Create(user.Username,
-                    !userPropertiesErrors.Any() ? createdAttributes : sentinelAttrs,
-                    createdUserGroups);
+                var user = _createUser(u);
 
-                if (!userPropertiesErrors.Any() && !usersErrors.Any())
-                {
-                    createdUsers.Add(userCreated);
-                }
+                if (!usersErrors.Any()) createdUsers.Add(user);
             }
             catch (EntityValidationException e)
             {
-                userPropertiesErrors.Add(e);
+                usersErrors.Add(e);
             }
 
-            if (userPropertiesErrors.Any())
-            {
-                usersErrors.Add(user.Username, userPropertiesErrors.ToArray());
-            }
+            return Task.CompletedTask;
         }
 
-        if (usersErrors.Any())
+        for (var i = 0; i < users.Count; i += MaxTask)
         {
-            throw new EntitiesValidationsException(usersErrors.ToImmutableDictionary());
+            var usersTask = new List<Task>();
+
+            for (var j = 0; j < int.Min(MaxTask, users.Count - i); j++) usersTask.Add(Run(users[i + j]));
+
+            try
+            {
+                await Task.WhenAll(usersTask);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("tete");
+            }
         }
 
-        _userRepository.InsertMany(createdUsers);
+        if (usersErrors.Any()) throw new EntitiesValidationsException(usersErrors.ToArray());
+
+        //_userRepository.InsertMany(createdUsers);
     }
 
     private static string[] _searchDuplicatesUsers(IEnumerable<UserPushInDto> users)
@@ -155,5 +102,91 @@ public class UserUseCases : IUserUseCases
         }
 
         return duplicatesUsernames.ToArray();
+    }
+
+    private User _createUser(UserPushInDto user)
+    {
+        var createdAttributes = new List<RadiusAttribute>();
+        var userAttributesErrors = new List<EntityValidationException>();
+
+        foreach (var attr in user.Attributes)
+        {
+            try
+            {
+                var createdAttr = _radiusAttributeFactory.Create(attr.Name, attr.Op, attr.Value);
+
+                if (userAttributesErrors.Any()) continue;
+
+                createdAttr.Owner = user.Username;
+                createdAttributes.Add(createdAttr);
+            }
+            catch (EntityValidationException e)
+            {
+                userAttributesErrors.Add(e);
+            }
+        }
+
+        var createdUserGroups = new List<UserGroup>();
+        var userGroupsErrors = new List<EntityValidationException>();
+
+        foreach (var uGp in user.Groups)
+        {
+            var group = _groupRepository.GetByName(uGp.Name);
+
+            if (group == null)
+            {
+                var error = new EntityValidationException(new Dictionary<string, object>()
+                    { ["Key"] = uGp.Name, ["Error"] = "Not Found" }.ToImmutableDictionary());
+
+                userGroupsErrors.Add(error);
+                continue;
+            }
+
+            try
+            {
+                var createdUserGroup = _userGroupFactory.Create(uGp.Priority);
+
+                if (userGroupsErrors.Any() || userAttributesErrors.Any()) continue;
+
+                createdUserGroup.UserUsername = user.Username;
+                createdUserGroup.GroupName = uGp.Name;
+                createdUserGroups.Add(createdUserGroup);
+            }
+            catch (EntityValidationException e)
+            {
+                userGroupsErrors.Add(e);
+            }
+        }
+
+        EntityValidationException? userError = null;
+        try
+        {
+            var attributesToValidation = !userAttributesErrors.Any()
+                ? createdAttributes
+                : new List<RadiusAttribute> { new() };
+
+            var userCreated = _userFactory.Create(user.Username, attributesToValidation);
+
+            if (!userGroupsErrors.Any() && !userAttributesErrors.Any())
+            {
+                userCreated.Groups = createdUserGroups;
+
+                return userCreated;
+            }
+        }
+        catch (EntityValidationException e)
+        {
+            userError = e;
+        }
+
+        var userErrorDict = userError != null
+            ? userError.Errors.ToDictionary(u => u.Key, u => u.Value)
+            : new Dictionary<string, object>();
+
+        if (userAttributesErrors.Any()) userErrorDict.Add("Attributes", userAttributesErrors.ToArray());
+
+        if (userGroupsErrors.Any()) userErrorDict.Add("Groups", userGroupsErrors.ToArray());
+
+        throw new EntityValidationException(userErrorDict.ToImmutableDictionary());
     }
 }

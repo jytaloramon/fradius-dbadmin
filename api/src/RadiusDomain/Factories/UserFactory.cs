@@ -10,9 +10,9 @@ public class UserFactory : BaseFactory<User>, IUserFactory
     {
     }
 
-    public User Create(string username, List<RadiusAttribute> attributes, List<UserGroup> groups)
+    public User Create(string username, List<RadiusAttribute> attributes)
     {
-        var user = new User { Username = username, Attributes = attributes, Groups = groups };
+        var user = new User { Username = username, Attributes = attributes };
         var resultValidation = RunValidator(user, "Username", "Attributes");
 
         if (resultValidation.IsValid) return user;

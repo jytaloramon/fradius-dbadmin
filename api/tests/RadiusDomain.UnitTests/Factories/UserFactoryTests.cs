@@ -9,13 +9,13 @@ public class UserFactoryTests : BaseFactoryUnitTests<User>
 {
     public UserFactoryTests() : base(new InlineValidator<User>(), new InlineValidator<User>())
     {
-        ValidatorAllValid.RuleFor(u => u.Username).Must(_ => true);
-        ValidatorAllValid.RuleFor(u => u.Attributes).Must(_ => true);
-        ValidatorAllValid.RuleFor(u => u.Groups).Must(_ => true);
-
         ValidatorAllInvalid.RuleFor(u => u.Username).Must(_ => false);
         ValidatorAllInvalid.RuleFor(u => u.Attributes).Must(_ => false);
         ValidatorAllInvalid.RuleFor(u => u.Groups).Must(_ => false);
+
+        ValidatorAllValid.RuleFor(u => u.Username).Must(_ => true);
+        ValidatorAllValid.RuleFor(u => u.Attributes).Must(_ => true);
+        ValidatorAllValid.RuleFor(u => u.Groups).Must(_ => true);
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class UserFactoryTests : BaseFactoryUnitTests<User>
 
         var actualErrors = Assert.Throws<EntityValidationException>(() =>
         {
-            factory.Create("*", new List<RadiusAttribute>(), new List<UserGroup>());
+            factory.Create("*", new List<RadiusAttribute>());
         });
         Assert.Equal(2, actualErrors.Errors.Count());
     }
@@ -35,13 +35,11 @@ public class UserFactoryTests : BaseFactoryUnitTests<User>
     {
         const string username = "username";
         var attributes = new List<RadiusAttribute>();
-        var groups = new List<UserGroup>();
 
         var factory = new UserFactory(ValidatorAllValid);
-        var actualUser = factory.Create(username, attributes, groups);
+        var actualUser = factory.Create(username, attributes);
 
         Assert.Equal(username, actualUser.Username);
         Assert.Equal(attributes, actualUser.Attributes);
-        Assert.Equal(groups, actualUser.Groups);
     }
 }

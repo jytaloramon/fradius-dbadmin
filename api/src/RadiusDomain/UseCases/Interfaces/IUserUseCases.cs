@@ -11,5 +11,5 @@ public interface IUserUseCases
      * <exception cref="EntitiesConflictException"></exception>
      * <exception cref="EntitiesValidationsException"></exception>
      */
-    public void Push(List<UserPushInDto> users);
+    public Task Push(List<UserPushInDto> users);
 }

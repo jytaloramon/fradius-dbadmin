@@ -10,5 +10,5 @@ public interface IUserGroupFactory
      * <exception cref="EntityValidationException"></exception>
      * <returns>UserGroup created.</returns>
      */
-    public UserGroup Create(string username, string group, int priority);
+    public UserGroup Create(int priority);
 }
