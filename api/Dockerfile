@@ -21,8 +21,12 @@ RUN passwd -d root \
 RUN printf "#!/bin/sh\n/usr/sbin/sshd & /bin/sh\n" > /startup.sh \
     && chmod +x /startup.sh
 
-EXPOSE 22
+WORKDIR /app
+
 
 VOLUME [ "/app" ]
+
+EXPOSE 22
+
 
 CMD [ "/startup.sh" ]
