@@ -1,11 +1,10 @@
 using System.Collections.Immutable;
-using RadiusDomain.Entities;
 
 namespace RadiusDomain.Exceptions;
 
-public class EntityValidationException : BaseException
+public class EntityValidationException : BaseException<object>
 {
-    public EntityValidationException(ImmutableDictionary<string, ErrorMessage[]> errors) : base(errors)
+    public EntityValidationException(ImmutableDictionary<string, object> errors) : base(errors)
     {
     }
 }

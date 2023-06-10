@@ -1,14 +1,13 @@
 using System.Collections.Immutable;
-using RadiusDomain.Entities;
 
 namespace RadiusDomain.Exceptions;
 
-public abstract class BaseException : Exception
+public abstract class BaseException<T> : Exception
 {
-    protected BaseException(ImmutableDictionary<string, ErrorMessage[]> errors)
+    protected BaseException(ImmutableDictionary<string, T> errors)
     {
         Errors = errors;
     }
 
-    public ImmutableDictionary<string, ErrorMessage[]> Errors { get; init; }
+    public ImmutableDictionary<string, T> Errors { get; init; }
 }
