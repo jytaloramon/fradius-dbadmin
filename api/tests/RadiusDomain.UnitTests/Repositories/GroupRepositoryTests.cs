@@ -68,7 +68,10 @@ public class GroupRepositoryTests
         {
             Name = groupName,
             Attributes = new List<RadiusAttribute>()
-                { new RadiusAttribute { Name = "Attr1", Op = ":=", Value = "Value1" } }
+            {
+                new RadiusAttribute { Name = "Attr1", Op = ":=", Value = "Value1" },
+                new RadiusAttribute { Name = "Attr2", Op = ":=", Value = "Value2" }
+            }
         };
 
         await _groupRepository.Insert(groupToInsert);
@@ -77,7 +80,7 @@ public class GroupRepositoryTests
 
         Assert.NotNull(actualGroup);
         Assert.Equal(groupName, actualGroup.Name);
-        Assert.Single(actualGroup.Attributes);
+        Assert.Equal(2, actualGroup.Attributes.Count);
     }
 
     [Fact]

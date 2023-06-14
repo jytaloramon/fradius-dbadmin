@@ -47,7 +47,7 @@ public class GroupRepository : IGroupRepository
 
     public Task<Group?> GetByName(string name)
     {
-        const string sql = "SELECT id, attribute, op, value FROM radgroupcheck WHERE groupname = @GroupName LIMIT 1";
+        const string sql = "SELECT id, attribute, op, value FROM radgroupcheck WHERE groupname = @GroupName";
 
         using var connection = _sgbd.GetDbConnection();
 
