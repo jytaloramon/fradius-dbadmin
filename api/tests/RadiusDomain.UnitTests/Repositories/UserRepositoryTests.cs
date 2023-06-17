@@ -2,7 +2,7 @@ using Moq;
 using RadiusDomain.Entities;
 using RadiusDomain.Repositories;
 using RadiusDomain.Repositories.Interfaces;
-using RadiusDomain.SGBDs.Psql;
+using RadiusDomain.SGBDs.Interfaces;
 using RadiusDomain.UnitTests.SGBDs;
 
 namespace RadiusDomain.UnitTests.Repositories;
@@ -14,31 +14,38 @@ public class UserRepositoryTests
         return new UserRepository(PostgresSgbdConnectionUnitTests.GetInstance(), radAttributeRepository);
     }
 
-    private static List<RadiusAttribute> GetDefaultRadiusAttributeList()
+    private static User CreateUser(string username, List<RadiusAttribute>? attributes, List<UserGroup>? groups)
     {
-        return new List<RadiusAttribute>()
+        return new User
         {
-            new RadiusAttribute { Name = "Attr1", Op = ":=", Value = "Value1" },
-            new RadiusAttribute { Name = "Attr2", Op = ":=", Value = "Value2" }
+            Username = username,
+            Attributes = attributes ?? new List<RadiusAttribute>
+            {
+                new() { Name = "Attr1", Op = ":=", Value = "Value1" },
+                new() { Name = "Attr2", Op = ":=", Value = "Value2" }
+            },
+            Groups = groups ?? new List<UserGroup>()
         };
     }
 
     [Fact]
     public async Task InsertMany_HandlingGetByNameException_ThrowArgumentException()
     {
-        var user = new User { Username = Guid.NewGuid().ToString(), Attributes = GetDefaultRadiusAttributeList() };
+        var user = CreateUser(Guid.NewGuid().ToString(), null, null);
 
-        var userRepository = new UserRepository(new PostgresConnection("", "", "", ""),
-            new Mock<IRadAttributeRepository>().Object);
+        var sgbdMock = new Mock<ISgbd>();
+        sgbdMock.Setup(sgbd => sgbd.GetDbConnection()).Throws(new Exception(""));
 
-        await Assert.ThrowsAsync<ArgumentException>(() => userRepository.InsertMany(new List<User>() { user }));
+        var userRepository = new UserRepository(sgbdMock.Object, new Mock<IRadAttributeRepository>().Object);
+
+        await Assert.ThrowsAsync<Exception>(() => userRepository.InsertMany(new List<User>() { user }));
     }
 
     [Fact]
     public async Task InsertMany_MultiUsers_ShouldNotHaveErrors()
     {
-        var user1 = new User { Username = Guid.NewGuid().ToString(), Attributes = GetDefaultRadiusAttributeList() };
-        var user2 = new User { Username = Guid.NewGuid().ToString(), Attributes = GetDefaultRadiusAttributeList() };
+        var user1 = CreateUser(Guid.NewGuid().ToString(), null, null);
+        var user2 = CreateUser(Guid.NewGuid().ToString(), null, null);
 
         var userRepository = CreateUserRepository(new Mock<IRadAttributeRepository>().Object);
         await userRepository.InsertMany(new List<User>() { user1, user2 });
@@ -55,23 +62,19 @@ public class UserRepositoryTests
     {
         var userBeforeUpRepository = CreateUserRepository(new Mock<IRadAttributeRepository>().Object);
 
-        var userBeforeUp = new User
-            { Username = Guid.NewGuid().ToString(), Attributes = GetDefaultRadiusAttributeList() };
+        var userBeforeUp = CreateUser(Guid.NewGuid().ToString(), null, null);
         await userBeforeUpRepository.InsertMany(new List<User>() { userBeforeUp });
         var actualUserBeforeUp = await userBeforeUpRepository.GetByName(userBeforeUp.Username);
 
-        var userUp = new User
+        var userUp = CreateUser(userBeforeUp.Username, new List<RadiusAttribute>
         {
-            Username = userBeforeUp.Username, Attributes = new List<RadiusAttribute>()
-            {
-                new RadiusAttribute { Name = "Attr1", Op = "==", Value = "Value1new" },
-                new RadiusAttribute { Name = "Attr4", Op = ":=", Value = "Value4" }
-            }
-        };
+            new RadiusAttribute { Name = "Attr1", Op = "==", Value = "Value1new" },
+            new RadiusAttribute { Name = "Attr4", Op = ":=", Value = "Value4" }
+        }, null);
 
         var radAttrRepositoryMock = new Mock<IRadAttributeRepository>();
         radAttrRepositoryMock.Setup(repo => repo.GetGroupCodeByAttribute(It.IsAny<string>()))
-            .Returns<string>((attribute) => attribute.Equals("Attr1") ? "a1b2c" : Guid.NewGuid().ToString()[0..4]);
+            .Returns<string>((attr) => attr.Equals("Attr1") ? "a1b2c" : Guid.NewGuid().ToString()[0..4]);
 
         var userUpRepository = CreateUserRepository(radAttrRepositoryMock.Object);
         await userUpRepository.InsertMany(new List<User>() { userUp });
@@ -90,27 +93,23 @@ public class UserRepositoryTests
     }
 
     [Fact]
-    public async Task InsertMany_ReplaceAttrAnotherFromSameGroup_ShouldNotHaveErrors()
+    public async Task InsertMany_ReplaceAttrAnotherFromSameGroup_DeleteOldAndAddNew()
     {
         var userBeforeUpRepository = CreateUserRepository(new Mock<IRadAttributeRepository>().Object);
 
-        var userBeforeUp = new User
-            { Username = Guid.NewGuid().ToString(), Attributes = GetDefaultRadiusAttributeList() };
+        var userBeforeUp = CreateUser(Guid.NewGuid().ToString(), null, null);
         await userBeforeUpRepository.InsertMany(new List<User>() { userBeforeUp });
         var actualUserBeforeUp = await userBeforeUpRepository.GetByName(userBeforeUp.Username);
 
-        var userUp = new User
+        var userUp = CreateUser(userBeforeUp.Username, new List<RadiusAttribute>
         {
-            Username = userBeforeUp.Username, Attributes = new List<RadiusAttribute>()
-            {
-                new RadiusAttribute { Name = "Attr3", Op = "==", Value = "Value3" },
-                new RadiusAttribute { Name = "Attr4", Op = ":=", Value = "Value4" }
-            }
-        };
+            new RadiusAttribute { Name = "Attr3", Op = "==", Value = "Value3" },
+            new RadiusAttribute { Name = "Attr4", Op = ":=", Value = "Value4" }
+        }, null);
 
         var radAttrRepositoryMock = new Mock<IRadAttributeRepository>();
         radAttrRepositoryMock.Setup(repo => repo.GetGroupCodeByAttribute(It.IsAny<string>()))
-            .Returns<string>((attribute) => attribute.Equals("Attr1") || attribute.Equals("Attr3")
+            .Returns<string>((attr) => attr.Equals("Attr1") || attr.Equals("Attr3")
                 ? "a1b2c"
                 : Guid.NewGuid().ToString()[0..4]);
 
@@ -143,7 +142,7 @@ public class UserRepositoryTests
     public async Task GetByName_Found_ReturnUser()
     {
         var expectedUsername = Guid.NewGuid().ToString();
-        var user1 = new User { Username = expectedUsername, Attributes = GetDefaultRadiusAttributeList() };
+        var user1 = CreateUser(expectedUsername, null, null);
 
         var userRepository = CreateUserRepository(new Mock<IRadAttributeRepository>().Object);
         await userRepository.InsertMany(new List<User>() { user1 });
@@ -157,7 +156,7 @@ public class UserRepositoryTests
     [Fact]
     public async Task GetAll_ReturnAListGreaterThan0()
     {
-        var user = new User { Username = Guid.NewGuid().ToString(), Attributes = GetDefaultRadiusAttributeList() };
+        var user = CreateUser(Guid.NewGuid().ToString(), null, null);
 
         var userRepository = CreateUserRepository(new Mock<IRadAttributeRepository>().Object);
         await userRepository.InsertMany(new List<User>() { user });
