@@ -3,19 +3,19 @@ using Dapper;
 using RadiusDomain.Entities;
 using RadiusDomain.Exceptions;
 using RadiusDomain.Repositories.Interfaces;
-using RadiusDomain.SGBDs;
+using RadiusDomain.SGBDs.Interfaces;
 
 namespace RadiusDomain.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    private readonly SgbdBase _sgbd;
+    private readonly ISgbd _sgbd;
 
     private readonly IRadAttributeRepository _radAttributeRepository;
 
     private const int MaxTask = 50;
 
-    public UserRepository(SgbdBase sgbd, IRadAttributeRepository radAttributeRepository)
+    public UserRepository(ISgbd sgbd, IRadAttributeRepository radAttributeRepository)
     {
         _sgbd = sgbd;
         _radAttributeRepository = radAttributeRepository;

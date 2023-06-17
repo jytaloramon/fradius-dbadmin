@@ -3,7 +3,7 @@ using RadiusDomain.SGBDs.Interfaces;
 
 namespace RadiusDomain.SGBDs;
 
-public abstract class SgbdBase
+public abstract class SgbdBase : ISgbd
 {
     private readonly string _host;
 
@@ -15,7 +15,7 @@ public abstract class SgbdBase
 
     private readonly string _database;
 
-    private protected SgbdBase(string host, string port, string username, string password, string database,
+    protected SgbdBase(string host, string port, string username, string password, string database,
         ISgbdExceptionHandler exceptionHandlerException)
     {
         _host = host;
