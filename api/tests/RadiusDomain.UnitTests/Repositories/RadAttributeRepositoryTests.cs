@@ -88,7 +88,7 @@ public class RadAttributeRepositoryTests
     }
 
     [Fact]
-    public void GetAllGroups_ReturnTheValue2()
+    public void GetAllGroups_ReturnAArrayWithLengthEqual2()
     {
         var repository = GetRadAttributeRepository();
 
