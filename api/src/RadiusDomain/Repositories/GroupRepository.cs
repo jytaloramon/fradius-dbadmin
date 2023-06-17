@@ -2,15 +2,15 @@ using System.Data.Common;
 using Dapper;
 using RadiusDomain.Entities;
 using RadiusDomain.Repositories.Interfaces;
-using RadiusDomain.SGBDs;
+using RadiusDomain.SGBDs.Interfaces;
 
 namespace RadiusDomain.Repositories;
 
 public class GroupRepository : IGroupRepository
 {
-    private readonly SgbdBase _sgbd;
+    private readonly ISgbd _sgbd;
 
-    public GroupRepository(SgbdBase sgbd)
+    public GroupRepository(ISgbd sgbd)
     {
         _sgbd = sgbd;
     }
