@@ -4,13 +4,13 @@ namespace RadiusDomain.UnitTests.Factories;
 
 public abstract class BaseFactoryUnitTests<T>
 {
-    protected readonly InlineValidator<T> ValidatorAllValid;
-
-    protected readonly InlineValidator<T> ValidatorAllInvalid;
-
-    protected BaseFactoryUnitTests(InlineValidator<T> validatorAllValid, InlineValidator<T> validatorAllInvalid)
+    protected BaseFactoryUnitTests(InlineValidator<T> validatorInValid, InlineValidator<T> validatorValid)
     {
-        ValidatorAllValid = validatorAllValid;
-        ValidatorAllInvalid = validatorAllInvalid;
+        ValidatorInValid = validatorInValid;
+        ValidatorValid = validatorValid;
     }
+
+    protected InlineValidator<T> ValidatorInValid { get; init; }
+
+    protected InlineValidator<T> ValidatorValid { get; init; }
 }

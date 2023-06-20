@@ -19,7 +19,8 @@ public abstract class BaseFactory<T>
         return _validator.Validate(entity, opt => { opt.IncludeProperties(properties); });
     }
 
-    protected EntityValidationException CreateEntityException(IEnumerable<KeyValuePair<string, object>> errors)
+    protected EntityValidationException CreateEntityValidationException(
+        IEnumerable<KeyValuePair<string, object>> errors)
     {
         return new EntityValidationException(new Dictionary<string, object>(errors).ToImmutableDictionary());
     }
