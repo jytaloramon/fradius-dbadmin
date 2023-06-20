@@ -4,7 +4,7 @@ public class Group
 {
     public string Name { get; set; } = "";
 
-    public List<RadiusAttribute> Attributes { get; set; } = new List<RadiusAttribute>();
+    public List<RadiusAttribute>? Attributes { get; set; }
 
-    public List<UserGroup> Groups { get; set; } = new List<UserGroup>();
+    public List<UserGroup>? Groups { get; set; }
 }

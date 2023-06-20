@@ -1,8 +1,7 @@
 using FluentValidation;
-using RadiusDomain.Entities;
 using RadiusDomain.ValueObjects;
 
-namespace RadiusDomain.Validations;
+namespace RadiusDomain.Entities.Validations;
 
 public class GroupValidation : AbstractValidator<Group>
 {
