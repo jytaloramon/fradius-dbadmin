@@ -11,7 +11,7 @@ public class GroupValidationTests : BaseEntityValidationUnitTests<Group>
     }
 
     [Fact]
-    public void PropertyName_Empty_ReturnValidationResultNotValid()
+    public void PropertyName_Empty_ReturnValidationResultInvalid()
     {
         const string property = "Name";
 
@@ -26,7 +26,7 @@ public class GroupValidationTests : BaseEntityValidationUnitTests<Group>
     [Theory]
     [InlineData(65)]
     [InlineData(80)]
-    public void PropertyName_GreaterThan64_ReturnValidationResultNotValid(int length)
+    public void PropertyName_GreaterThan64_ReturnValidationResultInvalid(int length)
     {
         const string property = "Name";
 
@@ -51,7 +51,7 @@ public class GroupValidationTests : BaseEntityValidationUnitTests<Group>
     }
 
     [Fact]
-    public void PropertyAttributes_Null_ReturnValidationResultNotValid()
+    public void PropertyAttributes_Null_ReturnValidationResultInvalid()
     {
         const string property = "Attributes";
 
@@ -64,7 +64,7 @@ public class GroupValidationTests : BaseEntityValidationUnitTests<Group>
     }
 
     [Fact]
-    public void PropertyAttributes_EmptyList_ReturnValidationResultNotValid()
+    public void PropertyAttributes_EmptyList_ReturnValidationResultInvalid()
     {
         const string property = "Attributes";
 
