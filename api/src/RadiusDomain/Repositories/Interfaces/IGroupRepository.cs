@@ -2,7 +2,6 @@ using RadiusDomain.Entities;
 
 namespace RadiusDomain.Repositories.Interfaces;
 
-public interface IGroupRepository:IReadAllRepository<Group>, IWriteRepository<Group>
+public interface IGroupRepository : IReadAllRepository<Group>, IReadFilteredByKey<Group>, IWriteRepository<Group>
 {
-    public Task<Group?> GetByUsername(string username);
 }
