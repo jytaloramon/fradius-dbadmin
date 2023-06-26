@@ -23,6 +23,6 @@ public class RadiusAttributeFactory : BaseFactory<RadiusAttribute>, IRadiusAttri
 
         var pairs = new List<KeyValuePair<string, object>>(errorsPairs) { new KeyValuePair<string, object>("Key", attribute.Name) };
 
-        throw CreateEntityException(pairs);
+        throw CreateEntityValidationException(pairs);
     }
 }

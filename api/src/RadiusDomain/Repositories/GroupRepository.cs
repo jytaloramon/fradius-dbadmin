@@ -10,42 +10,65 @@ public class GroupRepository : IGroupRepository
 {
     private readonly ISgbd _sgbd;
 
-    public GroupRepository(ISgbd sgbd)
+    private readonly IRadAttributeMerge _attributeMerge;
+
+    public GroupRepository(ISgbd sgbd, IRadAttributeMerge attributeMerge)
     {
         _sgbd = sgbd;
+        _attributeMerge = attributeMerge;
     }
 
-    public Task<int> Insert(Group group)
+    /**
+     * Create a new group if it doesn't exist, if it does, update it.
+     */
+    public async Task<int> Insert(Group group)
     {
-        var attrs = group.Attributes.Select(attribute => new
-        {
-            GroupName = group.Name, Attribute = attribute.Name, op = attribute.Op,
-            attribute.Value
-        });
+        if (group.Attributes == null) return 0;
 
-        const string sql =
-            "INSERT INTO radgroupcheck (groupname, attribute, op, value) VALUES (@GroupName, @Attribute, @op, @Value)";
+        var groupDb = await GetByKey(group.Name);
 
-        using var connection = _sgbd.GetDbConnection();
-        connection.Open();
+        var attrDbOp = _attributeMerge.Merge(groupDb != null ? groupDb.Attributes! : new List<RadiusAttribute>(),
+            group.Attributes);
 
-        using var transaction = connection.BeginTransaction();
+        var attrsToRemove = attrDbOp.ToRemove?.Select(attr => new { attr.Id });
+        var attrsToUpdate =
+            attrDbOp.ToUpdate?.Select(attr => new { attr.Id, Attribute = attr.Name, attr.Op, attr.Value });
+        var attrsToInsert = attrDbOp.ToInsert?.Select(attr =>
+            new { GroupName = group.Name, Attribute = attr.Name, attr.Op, attr.Value });
+
+        const string rmSql = "DELETE FROM radgroupcheck where id = @Id";
+        const string updateSql =
+            "UPDATE radgroupcheck SET attribute = @Attribute, op = @Op, value = @Value WHERE id = @Id";
+        const string insertSql =
+            "INSERT INTO radgroupcheck (groupname, attribute, op, value) VALUES (@GroupName, @Attribute, @Op, @Value)";
+
+        await using var connection = _sgbd.GetDbConnection();
+        await connection.OpenAsync();
+        
+        await using var transaction = await connection.BeginTransactionAsync();
 
         try
         {
-            var rowAffected = connection.Execute(sql, attrs, transaction);
-            transaction.Commit();
+            var rowAffected = 0;
 
-            return Task.FromResult(rowAffected);
+            if (attrsToRemove != null) rowAffected += await connection.ExecuteAsync(rmSql, attrsToRemove, transaction);
+            if (attrsToUpdate != null)
+                rowAffected += await connection.ExecuteAsync(updateSql, attrsToUpdate, transaction);
+            if (attrsToInsert != null)
+                rowAffected += await connection.ExecuteAsync(insertSql, attrsToInsert, transaction);
+
+            await transaction.CommitAsync();
+
+            return rowAffected;
         }
         catch (DbException e)
         {
-            transaction.Rollback();
+            await transaction.RollbackAsync();
             throw _sgbd.ExceptionHandler.Handler(e);
         }
     }
 
-    public Task<Group?> GetByName(string name)
+    public Task<Group?> GetByKey(string groupName)
     {
         const string sql = "SELECT id, attribute, op, value FROM radgroupcheck WHERE groupname = @GroupName";
 
@@ -53,7 +76,7 @@ public class GroupRepository : IGroupRepository
 
         try
         {
-            var result = connection.ExecuteReader(sql, new { GroupName = name });
+            var result = connection.ExecuteReader(sql, new { GroupName = groupName });
 
             var attrs = new List<RadiusAttribute>();
 
@@ -68,7 +91,7 @@ public class GroupRepository : IGroupRepository
                 attrs.Add(attr);
             }
 
-            return Task.FromResult(attrs.Count > 0 ? new Group { Name = name, Attributes = attrs } : null);
+            return Task.FromResult(attrs.Any() ? new Group { Name = groupName, Attributes = attrs } : null);
         }
         catch (DbException e)
         {
@@ -98,8 +121,7 @@ public class GroupRepository : IGroupRepository
 
                 groups.TryAdd(groupName, new Group { Name = groupName, Attributes = new List<RadiusAttribute>() });
 
-                var group = groups[groupName];
-                group.Attributes.Add(attr);
+                groups[groupName].Attributes!.Add(attr);
             }
 
             return Task.FromResult(groups.Values.ToList());

@@ -131,7 +131,7 @@ public class UserUseCases : IUserUseCases
 
         foreach (var uGp in user.Groups)
         {
-            var group = _groupRepository.GetByName(uGp.Name);
+            var group = _groupRepository.GetByKey(uGp.Name);
 
             if (group == null)
             {

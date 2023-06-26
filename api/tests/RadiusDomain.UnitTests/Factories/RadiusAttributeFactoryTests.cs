@@ -10,19 +10,19 @@ public class RadiusAttributeFactoryTests : BaseFactoryUnitTests<RadiusAttribute>
     public RadiusAttributeFactoryTests() : base(new InlineValidator<RadiusAttribute>(),
         new InlineValidator<RadiusAttribute>())
     {
-        ValidatorAllInvalid.RuleFor(attr => attr.Name).Must(_ => false);
-        ValidatorAllInvalid.RuleFor(attr => attr.Op).Must(_ => false);
-        ValidatorAllInvalid.RuleFor(attr => attr.Value).Must(_ => false);
+        ValidatorInValid.RuleFor(attr => attr.Name).Must(_ => false);
+        ValidatorInValid.RuleFor(attr => attr.Op).Must(_ => false);
+        ValidatorInValid.RuleFor(attr => attr.Value).Must(_ => false);
 
-        ValidatorAllValid.RuleFor(attr => attr.Name).Must(_ => true);
-        ValidatorAllValid.RuleFor(attr => attr.Op).Must(_ => true);
-        ValidatorAllValid.RuleFor(attr => attr.Value).Must(_ => true);
+        ValidatorValid.RuleFor(attr => attr.Name).Must(_ => true);
+        ValidatorValid.RuleFor(attr => attr.Op).Must(_ => true);
+        ValidatorValid.RuleFor(attr => attr.Value).Must(_ => true);
     }
 
     [Fact]
     public void Create_FailureAllProperty_ThrowsEntityValidationException()
     {
-        var factory = new RadiusAttributeFactory(ValidatorAllInvalid);
+        var factory = new RadiusAttributeFactory(ValidatorValid);
 
         var actualErrors = Assert.Throws<EntityValidationException>(() => { factory.Create("*", "*", "*"); });
         Assert.Equal(4, actualErrors.Errors.Count());
@@ -35,7 +35,7 @@ public class RadiusAttributeFactoryTests : BaseFactoryUnitTests<RadiusAttribute>
         const string op = "op";
         const string value = "value";
 
-        var factory = new RadiusAttributeFactory(ValidatorAllValid);
+        var factory = new RadiusAttributeFactory(ValidatorValid);
         var actualAttribute = factory.Create(name, op, value);
 
         Assert.Equal(name, actualAttribute.Name);

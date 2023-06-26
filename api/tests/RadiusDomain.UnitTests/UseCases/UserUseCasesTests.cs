@@ -101,8 +101,8 @@ public class UserUseCasesTests
     public async Task Push_GroupNotFound_ThrowEntitiesValidationsException()
     {
         var groupRepositoryMock = new Mock<IGroupRepository>();
-        groupRepositoryMock.Setup(repository => repository.GetByName(It.IsAny<string>()))
-            .Returns((Group?)null);
+        groupRepositoryMock.Setup(repository => repository.GetByKey(It.IsAny<string>()))
+            .Returns(null as Func<Task<Group?>>);
 
         var useCases = new UserUseCases(new Mock<IUserFactory>().Object, new Mock<IRadiusAttributeFactory>().Object,
             new Mock<IUserGroupFactory>().Object, new Mock<IUserRepository>().Object, groupRepositoryMock.Object);
@@ -139,8 +139,8 @@ public class UserUseCasesTests
                 .ToImmutableDictionary()));
 
         var groupRepositoryMock = new Mock<IGroupRepository>();
-        groupRepositoryMock.Setup(repository => repository.GetByName(It.IsAny<string>()))
-            .Returns(new Group());
+        groupRepositoryMock.Setup(repository => repository.GetByKey(It.IsAny<string>()))
+            .Returns(Task.FromResult(new Group())!);
 
         var useCases = new UserUseCases(new Mock<IUserFactory>().Object, new Mock<IRadiusAttributeFactory>().Object,
             userGroupFactMock.Object, new Mock<IUserRepository>().Object, groupRepositoryMock.Object);

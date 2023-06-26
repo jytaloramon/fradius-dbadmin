@@ -21,6 +21,6 @@ public class UserFactory : BaseFactory<User>, IUserFactory
             .Select(vfGp => new KeyValuePair<string, object>(vfGp.Key,
                 vfGp.Select(failure => new ErrorMessage(failure.ErrorCode, failure.ErrorMessage)).ToArray()));
 
-        throw CreateEntityException(errorsPairs);
+        throw CreateEntityValidationException(errorsPairs);
     }
 }
