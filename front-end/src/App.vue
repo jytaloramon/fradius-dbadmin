@@ -1,5 +1,7 @@
 <template>
-  <div id="app"></div>
+  <div id="app">
+    <p class="text-xs">ssdd</p>
+  </div>
 </template>
 
 <script lang="ts">
