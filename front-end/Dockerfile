@@ -4,8 +4,10 @@ FROM node:alpine3.18
 ARG PUID=1024
 ARG PGID=1024
 
-RUN addgroup -g ${PGID} app && \
-    adduser -u ${PUID} -DH \
+
+RUN deluser node && \
+    addgroup -g ${PGID} app && \
+    adduser -u ${PUID} -D \
     -g "User for applications" \
     -G app \
     -s /sbin/nologin \
