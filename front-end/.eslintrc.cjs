@@ -11,5 +11,10 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest'
-  }
+  },
+  rules: {
+    'quotes': ['error', 'single'],
+    'curly': ['warn', 'multi'],
+    'eqeqeq': ['error', 'always']
+  },
 }
