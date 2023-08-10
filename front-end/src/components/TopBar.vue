@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6">
+  <div>
     <div>
       <span class="font-semibold text-xl text-gray-800">{{ title }}</span>
     </div>

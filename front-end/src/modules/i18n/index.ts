@@ -9,6 +9,9 @@ const messages = {
       merger: 'Mesclar',
       users: 'Usuários',
       view: 'Visualizar'
+    },
+    message: {
+      indexOutOfRange: 'Índice fora do intervalo: {interval}'
     }
   }
 };
