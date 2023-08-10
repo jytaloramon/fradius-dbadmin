@@ -1,6 +1,6 @@
 <template>
   <section>
-    <top-bar title="Dashboard" :menu-items="menuItems" @item-clicked="(n) => { console.log(n) }" />
+    <top-bar :title="title" :menu-items="menuItems" />
   </section>
 </template>
 
@@ -16,10 +16,11 @@ export default defineComponent({
 
   data() {
     return {
+      title: this.$t('label.dashboard'),
       menuItems: [
-        { label: 'Todas as Métricas', path: '', isSelected: false },
-        { label: 'Gráficos', path: '', isSelected: true },
-        { label: 'Email', path: '', isSelected: false }
+        { label: 'Todas as Métricas', path: '' },
+        { label: 'Gráficos', path: '' },
+        { label: 'Email', path: '' }
       ]
     };
   },

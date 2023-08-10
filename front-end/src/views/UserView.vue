@@ -1,6 +1,6 @@
 <template>
   <section>
-    <top-bar :title="'Usuário'" :menu-items="menuItems" @item-clicked="(n) => { console.log(n) }" />
+    <top-bar :title="$t('label.users')" :menu-items="menuItems" />
 
     <router-view />
   </section>
@@ -19,9 +19,9 @@ export default defineComponent({
   data() {
     return {
       menuItems: [
-        { label: 'Visualizar', path: '', isSelected: false },
-        { label: 'Adicionar', path: '/add', isSelected: false },
-        { label: 'Mesclar', path: '', isSelected: true }
+        { label: this.$t('label.view'), path: '' },
+        { label: this.$t('label.add'), path: '/add' },
+        { label: this.$t('label.merger'), path: '' }
       ]
     };
   },

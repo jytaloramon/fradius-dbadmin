@@ -24,7 +24,7 @@
         <li class="h-10 my-1 pt-2 px-6">
           <a href="" class="">
             <span><font-awesome-icon icon="fa-solid fa-arrow-up-from-bracket" rotation="90" /></span>
-            <span class="ml-3">Sair (</span>
+            <span class="ml-3">{{ $t('label.exit') }} (</span>
             <span class="text-xs">@jytaloramon</span>
             <span>)</span>
           </a>
@@ -47,12 +47,12 @@ export default defineComponent({
       itemStored: menuItemStore(),
       menuItems: [
         {
-          label: 'Dashboard',
+          label: this.$t('label.dashboard'),
           icon: 'fa-solid fa-chart-line',
           path: '/',
         },
         {
-          label: 'Usuário',
+          label: this.$t('label.users'),
           icon: 'fa-regular fa-user',
           path: '/users',
         }
