@@ -1,5 +1,5 @@
 <template>
-  <div class="px-6 py-5">
+  <div class="p-6">
     <div>
       <span class="font-semibold text-xl text-gray-800">{{ title }}</span>
     </div>
@@ -7,7 +7,7 @@
     <div class="mt-1 font-semibold text-sm text-gray-700">
       <ul class="flex flex-row">
         <li v-for="(item, idx) in menuItems" :key="idx" :class="classMenuItem[item.isSelected ? 1 : 0]">
-          <a @click="$emit('itemClicked', idx)">{{ item.label }}</a>
+          <RouterLink :to="item.path">{{ item.label }}</RouterLink>
         </li>
       </ul>
       <div class="-m-[2px] border-b-2"></div>
@@ -17,17 +17,19 @@
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import { type ITopBarItem } from './interfaces/ITopBarItem';
+
+interface ITopBarItem {
+  label: string;
+  path: string;
+  isSelected: boolean;
+}
 
 
 export default defineComponent({
   name: 'TopBar',
 
   props: {
-    title: {
-      type: Object as PropType<string>,
-      required: true
-    },
+    title: String,
 
     menuItems: {
       type: Object as PropType<ITopBarItem[]>,

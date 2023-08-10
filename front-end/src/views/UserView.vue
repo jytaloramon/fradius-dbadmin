@@ -1,12 +1,15 @@
 <template>
   <section>
     <top-bar :title="'Usuário'" :menu-items="menuItems" @item-clicked="(n) => { console.log(n) }" />
+
+    <router-view />
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TopBar from '@/components/navigation/TopBar.vue';
+import { menuItemStore } from '@/stores/menuItem';
+import TopBar from '@/components/TopBar.vue';
 
 export default defineComponent({
   name: 'UserView',
@@ -17,10 +20,14 @@ export default defineComponent({
     return {
       menuItems: [
         { label: 'Visualizar', path: '', isSelected: false },
-        { label: 'Criar', path: '', isSelected: false },
+        { label: 'Adicionar', path: '/add', isSelected: false },
         { label: 'Mesclar', path: '', isSelected: true }
       ]
     };
-  }
+  },
+
+  mounted() {
+    menuItemStore().selectUsers();
+  },
 });
 </script>

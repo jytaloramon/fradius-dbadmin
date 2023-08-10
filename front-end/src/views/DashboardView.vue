@@ -1,12 +1,13 @@
 <template>
   <section>
-    <top-bar :title="'Dashboard'" :menu-items="menuItems" @item-clicked="(n) => { console.log(n) }" />
+    <top-bar title="Dashboard" :menu-items="menuItems" @item-clicked="(n) => { console.log(n) }" />
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TopBar from '@/components/navigation/TopBar.vue';
+import { menuItemStore } from '@/stores/menuItem';
+import TopBar from '@/components/TopBar.vue';
 
 export default defineComponent({
   name: 'DashboardView',
@@ -21,6 +22,10 @@ export default defineComponent({
         { label: 'Email', path: '', isSelected: false }
       ]
     };
-  }
+  },
+
+  mounted() {
+    menuItemStore().selectDashboard();
+  },
 });
 </script>
