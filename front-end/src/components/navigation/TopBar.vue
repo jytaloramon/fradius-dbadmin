@@ -1,5 +1,5 @@
 <template>
-  <div class="py-5">
+  <div class="px-6 py-5">
     <div>
       <span class="font-semibold text-xl text-gray-800">{{ title }}</span>
     </div>
@@ -24,6 +24,11 @@ export default defineComponent({
   name: 'TopBar',
 
   props: {
+    title: {
+      type: Object as PropType<string>,
+      required: true
+    },
+
     menuItems: {
       type: Object as PropType<ITopBarItem[]>,
       required: true
@@ -32,7 +37,6 @@ export default defineComponent({
 
   data() {
     return {
-      title: 'Dashboard',
       classMenuItem: [
         'py-3 ml-2 px-2 first:pl-0 first:ml-0',
         'py-3 ml-2 px-2 border-b-[3px] first:pl-0 first:ml-0 border-gray-700'
