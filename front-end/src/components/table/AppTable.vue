@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full flex flex-col items-center text-sm">
-    <table class="w-full table-fixed">
+  <div class="w-full h-full flex flex-col items-center text-sm">
+    <table class="w-full table-fixed overflow-x-auto">
       <thead class="text-left text-gray-600">
         <tr class="border-b-2">
           <slot name="table-headcol"></slot>

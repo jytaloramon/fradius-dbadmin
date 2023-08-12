@@ -1,8 +1,8 @@
 <template>
-  <section class="h-full px-8 py-6">
+  <section class="h-full px-8 py-6 bg-slate-100">
     <top-bar :title="$t('label.users')" :menu-items="menuItems" />
 
-    <div class="mt-6 p-6 h-5/6 bg-slate-100 rounded-xl">
+    <div class="pt-6">
       <router-view />
     </div>
   </section>
