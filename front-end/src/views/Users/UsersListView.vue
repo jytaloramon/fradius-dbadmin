@@ -1,15 +1,32 @@
 <template>
   <div>
-    <div class="w-1/2 flex flex-col items-center text-sm">
+    <div class="w-full flex flex-col items-center text-sm">
+      <div class="w-full flex justify-between">
+        <div>
+          <span class="text-base">Lista de Usuários</span>
+          <span class="ml-3">&lt;</span>
+          <span class="ml-2">&gt;</span>
+        </div>
+
+        <div>
+          <button type="button" class="px-3 py-1 border rounded-md">atualizar</button>
+        </div>
+      </div>
+
       <table class="w-full table-fixed">
         <thead class="text-left text-gray-600">
           <tr class="border-b-2">
             <th class="p-2">
               <div class="mt-1">
-                <checkbox-input-less-icon v-if="indexesSelected.size < users.length"
-                  :is-checked-input="indexesSelected.size > 0" @input-changed="v => eventTableCheckbox(v)" />
+                <span>
+                  <checkbox-input-less-icon v-if="indexesSelected.size < users.length"
+                    :is-checked-input="indexesSelected.size > 0" @input-changed="v => eventTableCheckbox(v)" />
 
-                <checkbox-input-square-icon v-else :is-checked-input="true" @input-changed="v => eventTableCheckbox(v)" />
+                  <checkbox-input-square-icon v-else :is-checked-input="true"
+                    @input-changed="v => eventTableCheckbox(v)" />
+                </span>
+                
+                <span class="text-xs">(62)</span>
               </div>
             </th>
             <th class="p-2">
@@ -17,6 +34,9 @@
             </th>
             <th class="p-2">
               <div>EMAIL</div>
+            </th>
+            <th class="p-2">
+              <div>ÚLTIMO REGISTRO</div>
             </th>
             <th class="p-2 text-center">
               <div>ATIVO</div>
@@ -34,6 +54,7 @@
             </td>
             <td class="p-2">{{ user.username }}</td>
             <td class="p-2">{{ user.email }}</td>
+            <td class="p-2">{{ user.lastRecord }}</td>
             <td class="p-2 text-center">
               <p>{{ user.isActive ? 'sim' : 'não' }}</p>
             </td>
@@ -74,10 +95,10 @@ export default defineComponent({
       indexesSelected: new Set() as Set<number>,
       t: ['<< Anterior', '1', '2', '3', '4', 'Próxima >>'],
       users: [
-        { username: '@test1', email: 'test1@mail.com', isActive: true },
-        { username: '@test2', email: 'test2@mail.com', isActive: true },
-        { username: '@test3', email: 'test3@mail.com', isActive: true },
-        { username: '@test4', email: 'test4@mail.com', isActive: true }
+        { username: '@test1', email: 'test1@mail.com', lastRecord: '09:43 12/08/2019', isActive: true },
+        { username: '@test2', email: 'test2@mail.com', lastRecord: '09:43 12/08/2019', isActive: false },
+        { username: '@test3', email: 'test3@mail.com', lastRecord: '09:43 12/08/2019', isActive: true },
+        { username: '@test4', email: 'test4@mail.com', lastRecord: '09:43 12/08/2019', isActive: true }
       ]
     };
   },
