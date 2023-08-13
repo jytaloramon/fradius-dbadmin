@@ -1,8 +1,8 @@
 <template>
-  <section class="h-full px-8 py-6">
-    <top-bar :title="$t('label.users')" :menu-items="menuItems" />
+  <section class="">
 
-    <div class="pt-6">
+
+    <div class="">
       <router-view />
     </div>
   </section>
@@ -10,13 +10,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { menuItemStore } from '@/stores/menuItem';
-import TopBar from '@/components/TopBar.vue';
 
 export default defineComponent({
   name: 'UserView',
 
-  components: { TopBar },
+  components: {},
 
   data() {
     return {
@@ -29,7 +27,6 @@ export default defineComponent({
   },
 
   mounted() {
-    menuItemStore().selectUsers();
   },
 });
 </script>

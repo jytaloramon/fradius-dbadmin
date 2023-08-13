@@ -1,7 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { faUser, faBell } from '@fortawesome/free-regular-svg-icons';
 import {
   faChartLine,
   faArrowUpFromBracket,
@@ -9,7 +9,7 @@ import {
   faTrash,
   faPenToSquare,
   faNetworkWired,
-  faChevronDown,
+  faChevronDown
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -20,7 +20,8 @@ library.add(
   faTrash,
   faPenToSquare,
   faNetworkWired,
-  faChevronDown
+  faChevronDown,
+  faBell
 );
 
 export default FontAwesomeIcon;

@@ -1,7 +1,7 @@
 <template>
   <aside class="h-full px-5 flex flex-col justify-between border-r">
     <div>
-      <div class="pt-7 mb-7 font-semibold text-xl">
+      <div class="pt-7 mb-9 font-semibold text-xl">
         <span class="ml-3 text-purple-600">FR</span>
         <span class="ml-1 text-pink-400">DbAdmin</span>
       </div>
