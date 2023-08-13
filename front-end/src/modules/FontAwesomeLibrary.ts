@@ -7,9 +7,20 @@ import {
   faArrowUpFromBracket,
   faRotateLeft,
   faTrash,
-  faPenToSquare
+  faPenToSquare,
+  faNetworkWired,
+  faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faUser, faChartLine, faArrowUpFromBracket, faRotateLeft, faTrash, faPenToSquare);
+library.add(
+  faUser,
+  faChartLine,
+  faArrowUpFromBracket,
+  faRotateLeft,
+  faTrash,
+  faPenToSquare,
+  faNetworkWired,
+  faChevronDown
+);
 
 export default FontAwesomeIcon;

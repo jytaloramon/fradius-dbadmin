@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-screen font-sans flex flex-row">
+  <div class="w-screen h-screen flex flex-row font-sans">
     <the-side-bar class="w-2/12 min-w-[175px]" />
     
     <main class="w-10/12">
@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TheSideBar from '@/components/TheSideBar.vue';
+import TheSideBar from '@/components/navigation/TheSideBar.vue';
 
 
 export default defineComponent({

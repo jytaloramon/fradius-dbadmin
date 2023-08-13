@@ -1,5 +1,5 @@
 <template>
-  <section class="h-full px-8 py-6 bg-slate-100">
+  <section class="h-full px-8 py-6">
     <top-bar :title="$t('label.users')" :menu-items="menuItems" />
 
     <div class="pt-6">

@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full">
-    <div class="w-11/12 p-6 bg-white  rounded-md">
+    <div class="w-11/12 p-6 bg-white rounded-md">
       <div class="w-full flex justify-between">
         <div>
           <span class="text-base">Lista de Usuários</span>
