@@ -1,8 +1,8 @@
 <template>
-  <li :class="classType[itemDesc.id === itemStored.getActualItemSelected.level ? 1 : 0 ? 1 : 0]">
+  <li :class="classType[itemDesc.key === itemStored.getActualItemSelected.key ? 1 : 0]">
     <RouterLink :to="itemDesc.path">
       <span><font-awesome-icon :icon="itemDesc.icon" /></span>
-      <span class="ml-2">{{ itemDesc.label }}</span>
+      <span class="ml-2">{{ $t(`label.${itemDesc.key}`) }}</span>
     </RouterLink>
   </li>
 </template>
@@ -10,7 +10,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import { menuItemStore } from '@/stores/menuItem';
-import { type IItemSideBarComum } from './interfaces/itemSideBar';
+import { type IItemSideBarComum } from '@/interfaces/ISidebarItem';
 
 
 export default defineComponent({

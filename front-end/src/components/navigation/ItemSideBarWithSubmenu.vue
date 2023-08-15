@@ -1,10 +1,10 @@
 <template>
   <li>
-    <div :class="itemClassType[itemDesc.id === itemStored.getActualItemSelected.level ? 1 : 0]">
+    <div :class="itemClassType[itemDesc.key === itemStored.getActualItemSelected.key ? 1 : 0]">
       <span>
         <a class="cursor-pointer">
           <span><font-awesome-icon :icon="itemDesc.icon" /></span>
-          <span class="ml-2">{{ itemDesc.label }}</span>
+          <span class="ml-2">{{ $t(`label.${itemDesc.key}`) }}</span>
         </a>
       </span>
 
@@ -20,8 +20,8 @@
         <li v-for="(item, idx) in itemDesc.items" :key="idx"
           :class="subitemClassType[itemStored.getActualItemSelected.subLevel === idx ? 1 : 0]">
           <RouterLink :to="item.path">
-            <span><font-awesome-icon :icon="itemDesc.icon" /></span>
-            <span class="ml-2">{{ item.label }}</span>
+            <span><font-awesome-icon :icon="item.icon" /></span>
+            <span class="ml-2">{{ $t(`label.${item.key}`) }}</span>
           </RouterLink>
         </li>
       </ul>
@@ -34,8 +34,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import { menuItemStore } from '@/stores/menuItem';
-
-import { type IItemSideBarWithSubmenu } from './interfaces/itemSideBar';
+import { type IItemSideBarWithSubmenu } from '@/interfaces/ISidebarItem';
 
 
 export default defineComponent({

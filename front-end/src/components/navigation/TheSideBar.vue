@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { menuItemStore } from '@/stores/menuItem';
+import { sidemenuItemsValue } from '@/ValueObjects/SidebarItemValues';
 
 import ItemSideBar from './ItemSideBar.vue';
 
@@ -42,32 +42,7 @@ export default defineComponent({
   data() {
     return {
       classTypeMenuItem: ['px-3 py-2 mt-2 rounded-md', 'px-3 py-2 mt-2 rounded-md bg-pink-100 text-pink-700'],
-      itemStored: menuItemStore(),
-      menuItems: [
-        {
-          id: 0,
-          label: this.$t('label.dashboard'),
-          icon: 'fa-solid fa-chart-line',
-          path: '/',
-        },
-        {
-          id: 1,
-          label: this.$t('label.users'),
-          icon: 'fa-regular fa-user',
-          items: [
-            { label: 'List', icon: 'fa-regular fa-user', path: '/users' },
-            { label: 'List1', icon: 'fa-regular fa-user', path: '/users' }
-          ]
-        },
-        {
-          id: 2,
-          label: this.$t('label.nas'),
-          icon: 'fa-solid fa-network-wired',
-          path: '/users',
-        }
-
-
-      ]
+      menuItems: sidemenuItemsValue
     }
   },
 });

@@ -9,7 +9,8 @@ import {
   faTrash,
   faPenToSquare,
   faNetworkWired,
-  faChevronDown
+  faChevronDown,
+  faList,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -21,7 +22,8 @@ library.add(
   faPenToSquare,
   faNetworkWired,
   faChevronDown,
-  faBell
+  faBell,
+  faList
 );
 
 export default FontAwesomeIcon;

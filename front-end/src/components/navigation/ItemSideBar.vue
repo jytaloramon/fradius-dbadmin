@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type { IItemSideBarComum, IItemSideBarWithSubmenu } from './interfaces/itemSideBar'
+import type { IItemSideBarComum, IItemSideBarWithSubmenu } from '@/interfaces/ISidebarItem'
 import ItemSideBarComum from './ItemSideBarComum.vue';
 import ItemSideBarWithSubmenu from './ItemSideBarWithSubmenu.vue';
 
@@ -24,7 +24,7 @@ export default defineComponent({
 
   methods: {
     isItemComum(): boolean {
-      return this.itemMenu.items === undefined;
+      return !this.itemMenu.items;
     }
   }
 });

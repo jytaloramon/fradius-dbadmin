@@ -6,6 +6,7 @@ const messages = {
       add: 'Adicionar',
       dashboard: 'Dashboard',
       exit: 'Sair',
+      list: 'Lista',
       merger: 'Mesclar',
       nas: 'NAS',
       users: 'Usuários',

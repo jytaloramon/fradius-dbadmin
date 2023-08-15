@@ -124,11 +124,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { menuItemStore } from '@/stores/menuItem';
 import IndexOutOfRangeException from '@/exceptions/IndexOutOfRangeException';
-
 import CheckboxInputSquareIcon from '@/components/CheckboxInputSquareIcon.vue';
 import CheckboxInputLessIcon from '@/components/CheckboxInputLessIcon.vue';
-
 import AppTable from '@/components/table/AppTable.vue';
 
 
@@ -149,6 +148,10 @@ export default defineComponent({
 
       ]
     };
+  },
+
+  created() {
+    menuItemStore().selectUsers(0);
   },
 
   methods: {
