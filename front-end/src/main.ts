@@ -7,7 +7,7 @@ import router from './router';
 import App from './App.vue';
 
 import './assets/main.css';
-import FontAwesomeLibrary from '@/modules/FontAwesomeLibrary';
+import FontAwesomeLibrary from '@/modules/font-awesome-library';
 
 const app = createApp(App);
 

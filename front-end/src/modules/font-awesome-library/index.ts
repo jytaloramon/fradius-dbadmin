@@ -6,11 +6,16 @@ import {
   faChartLine,
   faArrowUpFromBracket,
   faRotateLeft,
+  faRotateRight,
   faTrash,
   faPenToSquare,
   faNetworkWired,
   faChevronDown,
   faList,
+  faUserPlus,
+  faTriangleExclamation,
+  faRightToBracket,
+  faPaperPlane
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -23,7 +28,12 @@ library.add(
   faNetworkWired,
   faChevronDown,
   faBell,
-  faList
+  faList,
+  faUserPlus,
+  faTriangleExclamation,
+  faRightToBracket,
+  faRotateRight,
+  faPaperPlane
 );
 
 export default FontAwesomeIcon;

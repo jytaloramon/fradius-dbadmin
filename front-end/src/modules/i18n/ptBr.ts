@@ -1,0 +1,27 @@
+const i18nPtBr = {
+  label: {
+    add: 'Adicionar',
+    dashboard: 'Dashboard',
+    exit: 'Sair',
+    fillIn: 'Preencha',
+    forgotYourPassword: 'Esqueceu sua senha',
+    list: 'Lista',
+    logIn: 'Conecte-se',
+    merger: 'Mesclar',
+    nas: 'NAS',
+    users: 'Usuários',
+    view: 'Visualizar',
+  },
+  message: {
+    indexOutOfRange: 'Índice fora do intervalo: {interval}',
+    loginTitle: 'Faça login na sua conta',
+    welcome: 'Bem-Vindo',
+    passwordRecoverInstrution:
+      'Por favor, digite seu nome de seu usuário. \
+    Um e-mail será enviado a você contendo as instruções para a recuperação \
+    da sua senha.',
+    backToLogin: 'Faça login em vez disso',
+  }
+};
+
+export { i18nPtBr };
