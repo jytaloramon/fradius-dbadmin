@@ -20,18 +20,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+
 export default defineComponent({
-  name: 'TopBar',
-
-
-  data() {
-    return {
-
-    };
-  },
-
-  methods: {
-
-  }
+  name: 'TheTopBar',
 });
 </script>

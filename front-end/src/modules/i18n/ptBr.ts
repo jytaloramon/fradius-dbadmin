@@ -1,12 +1,15 @@
 const i18nPtBr = {
   label: {
+    admin: 'Admin',
     add: 'Adicionar',
     dashboard: 'Dashboard',
     exit: 'Sair',
     fillIn: 'Preencha',
     forgotYourPassword: 'Esqueceu sua senha',
+    groups: 'Grupos',
     list: 'Lista',
     logIn: 'Conecte-se',
+    management: 'Gerenciamento',
     merger: 'Mesclar',
     nas: 'NAS',
     users: 'Usuários',

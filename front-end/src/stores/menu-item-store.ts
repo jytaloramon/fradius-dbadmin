@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { sidemenuItemsValue } from '@/ValueObjects/SidebarItemValues';
+import { sideBarItemsValue } from '@/value-objects/sidebar-item-values';
 import type { IItemSideBarWithSubmenu } from '@/interfaces/ISidebarItem';
 import IndexOutOfRangeException from '@/exceptions/IndexOutOfRangeException';
 import KeyNotFound from '@/exceptions/KeyNotFound';
@@ -11,10 +11,10 @@ interface IItemSelected {
 
 const changeItem = (
   itemSelectedStore: IItemSelected,
-  key: 'dashboard' | 'users' | 'nas',
+  key: 'dashboard' | 'users' | 'nas' | 'management',
   newSubLevelIdx: number = 0
 ) => {
-  const newItem = sidemenuItemsValue[key];
+  const newItem = sideBarItemsValue[key];
   if (!newItem) throw new KeyNotFound(`Key "${key}" not found.`);
 
   itemSelectedStore.key = newItem.key;
@@ -48,6 +48,9 @@ export const menuItemStore = defineStore('menu-item', {
     },
     selectUsers(SubLeverIdx: number) {
       changeItem(this.itemSelected, 'users', SubLeverIdx);
+    },
+    selectManagement(SubLeverIdx: number) {
+      changeItem(this.itemSelected, 'management', SubLeverIdx);
     }
   }
 });

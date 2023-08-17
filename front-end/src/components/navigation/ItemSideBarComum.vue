@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import { menuItemStore } from '@/stores/menuItem';
+import { menuItemStore } from '@/stores/menu-item-store';
 import { type IItemSideBarComum } from '@/interfaces/ISidebarItem';
 
 
@@ -26,7 +26,7 @@ export default defineComponent({
   data() {
     return {
       itemStored: menuItemStore(),
-      classType: ['px-3 py-2 mt-2 rounded-md', 'px-3 py-2 mt-2 rounded-md bg-pink-100 text-pink-700'],
+      classType: ['flex justify-between py-2 px-3 mt-2', 'flex justify-between py-2 px-3 mt-2 text-pink-700 bg-gradient-to-r from-pink-50 border-l-2 border-pink-700']
     };
   }
 });

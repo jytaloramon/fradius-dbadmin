@@ -7,6 +7,8 @@ import AccountRecoveryPage from '@/views/account/AccountRecoveryPage.vue';
 import UserView from '@/views/users/UsersView.vue';
 import UserAddView from '@/views/users/UserAddView.vue';
 import UsersListView from '@/views/users/UsersListView.vue';
+import ManagementPage from '@/views/management/ManagementPage.vue';
+import ManagementAdminPage from '@/views/management/ManagementAdminPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +21,12 @@ const router = createRouter({
         { path: 'signin', component: AccountSigninPage },
         { path: 'recovery', component: AccountRecoveryPage }
       ]
+    },
+    {
+      path: '/management',
+      component: ManagementPage,
+      redirect: '',
+      children: [{ path: 'admin', component: ManagementAdminPage }]
     },
     {
       path: '/users',

@@ -16,7 +16,10 @@ import {
   faTriangleExclamation,
   faRightToBracket,
   faPaperPlane,
-  faLock
+  faLock,
+  faUserAstronaut,
+  faLayerGroup,
+  faSliders
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -35,7 +38,10 @@ library.add(
   faRightToBracket,
   faRotateRight,
   faPaperPlane,
-  faLock
+  faLock,
+  faUserAstronaut,
+  faLayerGroup,
+  faSliders
 );
 
 export default FontAwesomeIcon;

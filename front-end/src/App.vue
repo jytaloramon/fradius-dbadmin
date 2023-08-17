@@ -1,6 +1,6 @@
 <template>
   <div class="w-screen h-screen flex flex-row font-sans bg-slate-100">
-    <router-view/>
+    <router-view />
   </div>
 
   <!--
@@ -18,12 +18,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import TheSideBar from '@/components/navigation/TheSideBar.vue';
-import TopBar from './components/navigation/TopBar.vue';
 
 
 export default defineComponent({
   name: 'App',
-  components: { TheSideBar, TopBar }
 });
 </script>

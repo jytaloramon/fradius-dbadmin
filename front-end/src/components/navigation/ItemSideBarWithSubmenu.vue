@@ -1,39 +1,33 @@
 <template>
   <li>
-    <div :class="itemClassType[itemDesc.key === itemStored.getActualItemSelected.key ? 1 : 0]">
-      <span>
-        <a class="cursor-pointer">
-          <span><font-awesome-icon :icon="itemDesc.icon" /></span>
-          <span class="ml-2">{{ $t(`label.${itemDesc.key}`) }}</span>
-        </a>
-      </span>
+    <div :class="classType.item[itemDesc.key === itemStored.getActualItemSelected.key ? 1 : 0]">
+      <a class="cursor-pointer">
+        <span><font-awesome-icon :icon="itemDesc.icon" /></span>
+        <span class="ml-3">{{ $t(`label.${itemDesc.key}`) }}</span>
+      </a>
 
-      <span class="float-right">
-        <a class="cursor-pointer" @click="changeIsVisibleValue()">
-          <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" :rotation="isVisible ? 0 : 180" />
-        </a>
-      </span>
+      <a class="cursor-pointer" @click="changeIsVisibleValue()">
+        <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" :rotation="isVisible ? 0 : 180" />
+      </a>
     </div>
 
-    <div v-if="isVisible" class="ml-4 py-2">
-      <ul class="border-l-2 border-b-2 rounded-bl-lg pb-4 border-pink-200">
+    <div v-if="isVisible">
+      <ul>
         <li v-for="(item, idx) in itemDesc.items" :key="idx"
-          :class="subitemClassType[itemStored.getActualItemSelected.subLevel === idx ? 1 : 0]">
+          :class="classType.subItem[itemDesc.key === itemStored.getActualItemSelected.key && itemStored.getActualItemSelected.subLevel === idx ? 1 : 0]">
           <RouterLink :to="item.path">
             <span><font-awesome-icon :icon="item.icon" /></span>
-            <span class="ml-2">{{ $t(`label.${item.key}`) }}</span>
+            <span class="ml-3">{{ $t(`label.${item.key}`) }}</span>
           </RouterLink>
         </li>
       </ul>
-
-      <p class="ml-2 -mt-5 p-3 bg-white text-xs">Ocultar</p>
     </div>
   </li>
 </template>
 
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import { menuItemStore } from '@/stores/menuItem';
+import { menuItemStore } from '@/stores/menu-item-store';
 import { type IItemSideBarWithSubmenu } from '@/interfaces/ISidebarItem';
 
 
@@ -51,8 +45,10 @@ export default defineComponent({
     return {
       itemStored: menuItemStore(),
       isVisible: false,
-      itemClassType: ['px-3 py-2 mt-2 rounded-md', 'px-3 py-2 mt-2 rounded-md bg-pink-100 text-pink-700'],
-      subitemClassType: ['-ml-[2px] mt-1 px-5 py-1 border-l-2 border-pink-200', '-ml-[2px] mt-1 px-5 py-1 border-l-2 border-pink-400'],
+      classType: {
+        item: ['flex justify-between py-2 px-3 mt-2', 'flex justify-between py-2 px-3 mt-2 text-pink-700 bg-gradient-to-r from-pink-50 border-l-2 border-pink-700'],
+        subItem: ['py-2 px-3 border-l-2 border-pink-200', 'py-2 px-3 text-pink-500 border-l-2 border-pink-200']
+      },
     };
   },
 
