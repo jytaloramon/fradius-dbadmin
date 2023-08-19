@@ -1,11 +1,20 @@
-export default abstract class Exception {
-  private _msg: string;
+export interface IParametersException {
+  [key: string]: Object;
+}
 
-  public constructor(msg: string) {
-    this._msg = msg;
+export default abstract class Exception extends Error {
+  public constructor(
+    private _messageKey: string,
+    private _parameters?: IParametersException
+  ) {
+    super(_messageKey);
   }
 
-  public get msg(): string {
-    return this._msg;
+  public getMessageKey(): string {
+    return this._messageKey;
+  }
+
+  public getParameters(): IParametersException | undefined {
+    return this._parameters;
   }
 }
