@@ -1,7 +1,8 @@
 <template>
-  <div class="pt-4">
-    <div class="p-3 rounded-lg border">
-      <label class="absolute px-2 -mt-6 ml-0 text-xs bg-white">{{ fieldDesc.label }}</label>
+  <div class="pt-2">
+    <label class="relative z-30 px-2 ml-2.5 text-xs bg-white">{{ fieldDesc.label }}</label>
+
+    <div class="relative z-10 p-3 rounded-lg border -mt-2">
       <slot></slot>
     </div>
 

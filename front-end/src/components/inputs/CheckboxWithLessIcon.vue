@@ -9,13 +9,10 @@ import { defineComponent } from 'vue';
 
 
 export default defineComponent({
-  name: 'CheckboxInputLess',
+  name: 'CheckboxWithLessIcon',
 
   props: {
-    isCheckedInput: {
-      type: Boolean,
-      required: true
-    }
+    isCheckedInput: Boolean
   }
 });
 </script>
