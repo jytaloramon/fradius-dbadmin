@@ -1,32 +1,34 @@
 <template>
-  <div class="w-full h-full flex flex-col items-center text-sm">
-    <table class="w-full table-fixed overflow-x-auto">
+  <div class="text-sm overflow-y-auto overflow-x-auto">
+    <table class="w-full table-auto">
       <thead class="text-left text-gray-600">
-        <tr class="border-b-2">
-          <slot name="table-headcol"></slot>
+        <tr class="border-y">
+          <slot name="head"></slot>
         </tr>
       </thead>
 
       <tbody>
-        <slot name="table-bodyrow"></slot>
+        <slot name="body"></slot>
       </tbody>
 
       <slot name="table-foot"></slot>
     </table>
 
-    <div v-if="pagination!.max > 1" class="mt-6 py-2 flex border-2 border-gray-500 rounded-lg text-xs">
-      <button-pagination-pass-table :button-desc="{ label: '<< Anterior', disable: pagination!.actual <= 1 }"
-        class="border-r" />
+    <div class="flex justify-center">
+      <div v-if="pagination!.max > 1" class="mt-6 py-2 flex border-2 border-gray-500 rounded-lg text-xs">
+        <button-pagination-pass-table :button-desc="{ label: '<< Anterior', disable: pagination!.actual <= 1 }"
+          class="border-r" />
 
-      <ul class="flex">
-        <li v-for="(p, k) in pagination?.max" :key="k" class="px-2 py-1 border-r last:border-r-0 border-gray-400">
-          <a v-if="p === pagination?.actual" class="p-2 cursor-pointer border-b border-gray-400">{{ p }}</a>
-          <a v-else class="p-2 cursor-pointer">{{ p }}</a>
-        </li>
-      </ul>
+        <ul class="flex">
+          <li v-for="(p, k) in pagination?.max" :key="k" class="px-2 py-1 border-r last:border-r-0 border-gray-400">
+            <a v-if="p === pagination?.actual" class="p-2 cursor-pointer border-b border-gray-400">{{ p }}</a>
+            <a v-else class="p-2 cursor-pointer">{{ p }}</a>
+          </li>
+        </ul>
 
-      <button-pagination-pass-table :button-desc="{ label: 'Próxima >>', disable: pagination!.actual >= pagination!.max }"
-        class="border-l" />
+        <button-pagination-pass-table
+          :button-desc="{ label: 'Próxima >>', disable: pagination!.actual >= pagination!.max }" class="border-l" />
+      </div>
     </div>
   </div>
 </template>
