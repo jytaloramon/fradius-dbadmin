@@ -16,7 +16,7 @@ const i18nPtBr = {
     view: 'Visualizar',
   },
   message: {
-    indexOutOfRange: 'Índice fora do intervalo: {interval}',
+    indexOutOfRange: 'Índice fora do intervalo, compreendido como (min: {min}) e (max: {max}) ',
     loginTitle: 'Faça login na sua conta',
     welcome: 'Bem-Vindo',
     passwordRecoverInstrution:

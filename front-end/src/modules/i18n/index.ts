@@ -1,5 +1,5 @@
 import { createI18n } from 'vue-i18n';
-import { i18nPtBr } from './ptBr';
+import { i18nPtBr } from './pt-br';
 
 const i18nModule = createI18n({
   locale: 'pt-BR',
