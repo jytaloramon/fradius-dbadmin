@@ -19,7 +19,11 @@ import {
   faLock,
   faUserAstronaut,
   faLayerGroup,
-  faSliders
+  faSliders,
+  faDatabase,
+  faEnvelope,
+  faPlus,
+  faXmark
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -41,7 +45,11 @@ library.add(
   faLock,
   faUserAstronaut,
   faLayerGroup,
-  faSliders
+  faSliders,
+  faDatabase,
+  faEnvelope,
+  faPlus,
+  faXmark
 );
 
 export default FontAwesomeIcon;
