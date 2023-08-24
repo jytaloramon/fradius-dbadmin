@@ -1,5 +1,12 @@
 <template>
-  <app-access-account-box :header="headerTexts">
+  <app-box class="w-[420px] m-auto">
+    <h1 class="text-base text-center font-bold">{{ headerTexts.title }}</h1>
+    <h2 class="mt-2 text-center text-base">{{ headerTexts.message }}</h2>
+    <h3
+      class="py-2 mt-2 text-sm text-center before:float-left before:w-[130px] before:mt-3 before:border-dashed before:border-[1px]  after:float-right after:w-[130px] after:mt-3 after:border-dashed after:border-[1px]">
+      {{ headerTexts.subtitle }}
+    </h3>
+
     <div class="mt-3">
       <form>
         <input-text-with-left-icon :input-desc="form.username"
@@ -19,12 +26,12 @@
         </div>
       </form>
     </div>
-  </app-access-account-box>
+  </app-box>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import AppAccessAccountBox from '@/components/boxes/AppAccessAccountBox.vue';
+import AppBox from '@/components/boxes/AppBox.vue';
 import ButtonWithLoading from '@/components/buttons/ButtonWithLoading.vue'
 import InputTextWithLeftIcon from '@/components/inputs/InputTextWithLeftIcon.vue'
 
@@ -32,7 +39,7 @@ import InputTextWithLeftIcon from '@/components/inputs/InputTextWithLeftIcon.vue
 export default defineComponent({
   name: 'AccountSigninPage',
 
-  components: { AppAccessAccountBox, ButtonWithLoading, InputTextWithLeftIcon },
+  components: { AppBox, ButtonWithLoading, InputTextWithLeftIcon },
 
   data() {
     return {
