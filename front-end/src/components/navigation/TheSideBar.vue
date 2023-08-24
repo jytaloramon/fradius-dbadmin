@@ -1,9 +1,15 @@
 <template>
-  <aside class="h-full px-5 flex flex-col justify-between border-r bg-white">
+  <aside class="h-full px-5 flex flex-col justify-between bg-white">
     <div>
-      <div class="pt-7 mb-9 font-semibold text-xl">
-        <span class="ml-2 text-purple-600">FR</span>
-        <span class="ml-1 text-pink-400">DbAdmin</span>
+      <div class="flex ml-3 mt-7 mb-9 font-semibold text-green-600">
+        <div>
+          <font-awesome-icon class="mt-1" icon="fa-solid fa-database" size="xl" />
+        </div>
+        
+        <div class="ml-2 text-xs">
+          <p>FreeRadius</p>
+          <p>Admin</p>
+        </div>
       </div>
 
       <div>
