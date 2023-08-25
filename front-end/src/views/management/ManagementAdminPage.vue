@@ -1,6 +1,6 @@
 <template>
   <div class="flex md:h-[576px] py-4">
-    <app-box :title="'Lista de Usuários'" class="w-1/2 md:h-[560px]">
+    <app-box class="w-1/2 md:h-[560px]">
       <div>
         <div class="inline-block">
           <span class="text-base">Lista de Usuários</span>
