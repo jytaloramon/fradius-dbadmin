@@ -9,6 +9,7 @@ import UserAddView from '@/views/users/UserAddView.vue';
 import UsersListView from '@/views/users/UsersListView.vue';
 import ManagementPage from '@/views/management/ManagementPage.vue';
 import ManagementAdminPage from '@/views/management/ManagementAdminPage.vue';
+import ManagementGroupPage from '@/views/management/ManagementGroupPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,7 +27,10 @@ const router = createRouter({
       path: '/management',
       component: ManagementPage,
       redirect: '',
-      children: [{ path: 'admin', component: ManagementAdminPage }]
+      children: [
+        { path: 'admin', component: ManagementAdminPage },
+        { path: 'group', component: ManagementGroupPage }
+      ]
     },
     {
       path: '/users',

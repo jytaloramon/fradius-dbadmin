@@ -23,7 +23,9 @@ import {
   faDatabase,
   faEnvelope,
   faPlus,
-  faXmark
+  faXmark,
+  faFloppyDisk,
+  faEraser
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -49,7 +51,9 @@ library.add(
   faDatabase,
   faEnvelope,
   faPlus,
-  faXmark
+  faXmark,
+  faFloppyDisk,
+  faEraser
 );
 
 export default FontAwesomeIcon;
