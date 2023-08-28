@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  web:
+    image: frdbadmin-front-dev:0.1
+    build:
+      context: front-end
+      args:
+        - PUID=1024
+        - PGID=1024
+    container_name: frdbadmin-web-dev
+    ports:
+      - '127.0.0.1:35000:80'
+      - '127.0.0.1:35000:22'
+    #volumes:
+    #  - $(pwd)/app:/app
+    restart: unless-stopped
+
+  api:
+    image: frdbadmin-api-dev:0.1
+    build:
+      context: api
+      args:
+        - PUID=1000
+        - PGID=984
+      target: dev
+    container_name: frdbadmin-api-dev
+    ports:
+      - '127.0.0.1:34000:5046'
+      - '127.0.0.1:34100:22'
+    volumes:
+      - /home/jytaloramon/Develop/fradius-dbadmin/api:/app
+    restart: unless-stopped
+
+  psqldb:
+    image: postgres:15.4-alpine
+    container_name: frdbadmin-psqldb-dev
+    ports:
+      - '127.0.0.1:33000:5432'
+    #volumes:
+    #  - $(pwd)/pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=dev
+      - POSTGRES_DB=db_frdbadmin
+    restart: unless-stopped
