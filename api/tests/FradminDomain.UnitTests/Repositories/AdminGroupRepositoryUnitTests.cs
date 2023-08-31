@@ -39,8 +39,9 @@ public class AdminGroupRepositoryUnitTests
     {
         var group = new AdminGroup
             { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)40, (Rules)100 }) };
+       
         var actual = await _repository.Insert(group);
 
-        Assert.Equal(3, actual);
+        Assert.True(actual.Id > 0);
     }
 }

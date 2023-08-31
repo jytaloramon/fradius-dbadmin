@@ -45,7 +45,7 @@ public class AdminGroupRepository : IAdminGroupRepository
         }
     }
 
-    public Task<int> Insert(AdminGroup adminGroup)
+    public Task<AdminGroup> Insert(AdminGroup adminGroup)
     {
         const string sqlInsertGroup = "INSERT INTO tb_admin_group (admg_name) VALUES (@Name) RETURNING admg_id";
         const string sqlInsertRule = "INSERT INTO tb_rule (rule_id, rule_admg_id) VALUES (@Id, @IdGroup)";
@@ -65,7 +65,9 @@ public class AdminGroupRepository : IAdminGroupRepository
 
             transaction.Commit();
 
-            return Task.FromResult(rowAffected + 1);
+            var adminGroupInserted = new AdminGroup { Id = idGen, Name = adminGroup.Name, Rules = adminGroup.Rules };
+
+            return Task.FromResult<AdminGroup>(adminGroupInserted);
         }
         catch (DbException e)
         {
