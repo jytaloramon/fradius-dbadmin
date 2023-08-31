@@ -1,9 +1,9 @@
 using System.Data.Common;
-using RadiusDomain.SGBDs.Interfaces;
+using FradminDomain.SGBDs.Interfaces;
 
-namespace RadiusDomain.SGBDs;
+namespace FradminDomain.SGBDs;
 
-public abstract class SgbdBase : ISgbd
+public abstract class SgbdBase
 {
     private readonly string _host;
 
