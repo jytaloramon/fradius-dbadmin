@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RadiusDomain\RadiusDomain.csproj" />
+    <ProjectReference Include="..\FradminDomain\FradminDomain.csproj" />
   </ItemGroup>
+
 
 </Project>
