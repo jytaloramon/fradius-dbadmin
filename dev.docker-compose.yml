@@ -8,12 +8,14 @@ services:
       args:
         - PUID=1024
         - PGID=1024
-    container_name: frdbadmin-web-dev
+    container_name: frdba-dev-web
     ports:
-      - '127.0.0.1:35000:80'
       - '127.0.0.1:35000:22'
-    #volumes:
-    #  - $(pwd)/app:/app
+      - '127.0.0.1:35000:80'
+    volumes:
+      - $(pwd)/app:/app
+    networks:
+      - frdba-dev-net
     restart: unless-stopped
 
   api:
@@ -24,23 +26,35 @@ services:
         - PUID=1000
         - PGID=984
       target: dev
-    container_name: frdbadmin-api-dev
+    container_name: frdba-dev-api
     ports:
-      - '127.0.0.1:34000:5046'
       - '127.0.0.1:34100:22'
+      - '127.0.0.1:34000:5046'
     volumes:
-      - /home/jytaloramon/Develop/fradius-dbadmin/api:/app
+      - $(pwd)/api:/app
+    networks:
+      - frdba-dev-net
     restart: unless-stopped
 
   psqldb:
     image: postgres:15.4-alpine
-    container_name: frdbadmin-psqldb-dev
+    container_name: frdba-dev-psqldb
     ports:
       - '127.0.0.1:33000:5432'
-    #volumes:
-    #  - $(pwd)/pg_data:/var/lib/postgresql/data
+    volumes:
+      - $(pwd)/pg_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=dev
       - POSTGRES_PASSWORD=dev
       - POSTGRES_DB=db_frdbadmin
+    networks:
+      - frdba-dev-net
     restart: unless-stopped
+
+networks:
+  frdba-dev-net:
+    name: frdba-dev-net
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/28
