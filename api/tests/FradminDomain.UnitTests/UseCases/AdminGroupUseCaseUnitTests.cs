@@ -13,6 +13,60 @@ namespace FradminDomain.UnitTest.UseCases;
 public class AdminGroupUseCaseUnitTests
 {
     [Fact]
+    public async Task GetById_RepositoryGetAllThrowGenericException_ThrowGenericException()
+    {
+        var factoryMock = new Mock<IAdminGroupFactory>();
+
+        var repositoryMock = new Mock<IAdminGroupRepository>();
+        repositoryMock.Setup(repository => repository.GetById(It.IsAny<short>()))
+            .Throws(new GenericException(new Dictionary<string, object>() { ["message"] = "Test" }
+                .ToImmutableDictionary()));
+
+        var useCase = new AdminGroupUseCase(factoryMock.Object, repositoryMock.Object);
+
+        var except = await Assert.ThrowsAsync<GenericException>(async () => { await useCase.GetById(0); });
+
+        Assert.True(except.Errors.ContainsKey("message"));
+    }
+
+    [Fact]
+    public async Task GetById_NotFound_ReturnNull()
+    {
+        var factoryMock = new Mock<IAdminGroupFactory>();
+
+        var repositoryMock = new Mock<IAdminGroupRepository>();
+        repositoryMock.Setup(repository => repository.GetById(It.IsAny<short>()))
+            .Returns(Task.FromResult<AdminGroup?>(null));
+
+        var useCase = new AdminGroupUseCase(factoryMock.Object, repositoryMock.Object);
+
+        var actual = await useCase.GetById(0);
+
+        Assert.Null(actual);
+    }
+
+    [Fact]
+    public async Task GetById_Found_ReturnTheEntity()
+    {
+        var groupReturned = new AdminGroup { Id = 1000, Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)1 }) };
+
+        var factoryMock = new Mock<IAdminGroupFactory>();
+
+        var repositoryMock = new Mock<IAdminGroupRepository>();
+        repositoryMock.Setup(repository => repository.GetById(It.IsAny<short>()))
+            .Returns(Task.FromResult<AdminGroup?>(groupReturned));
+
+        var useCase = new AdminGroupUseCase(factoryMock.Object, repositoryMock.Object);
+
+        var actual = await useCase.GetById(1000);
+
+        Assert.NotNull(actual);
+        Assert.Equal(groupReturned.Id, actual.Id);
+        Assert.Equal(groupReturned.Name, actual.Name);
+        Assert.True(groupReturned.Rules.SetEquals(actual.Rules));
+    }
+
+    [Fact]
     public async Task GetAll_RepositoryGetAllThrowGenericException_ThrowGenericException()
     {
         var factoryMock = new Mock<IAdminGroupFactory>();
