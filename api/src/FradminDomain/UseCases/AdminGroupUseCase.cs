@@ -17,6 +17,13 @@ public class AdminGroupUseCase : IAdminGroupUseCase
         _repository = repository;
     }
 
+    public async Task<List<AdminGroupFullDto>> GetAll()
+    {
+        var allGroups = await _repository.GetAll();
+
+        return allGroups.Select(group => new AdminGroupFullDto(group.Id, group.Name, group.Rules.ToArray())).ToList();
+    }
+
     public async Task<AdminGroupFullDto> Add(AdminGroupNewDto groupDto)
     {
         var group = _factory.Create(groupDto.Name, groupDto.Rules.ToHashSet());
