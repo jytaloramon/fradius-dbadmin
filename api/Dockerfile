@@ -20,7 +20,7 @@ ARG PGID=1024
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install -y nano openssh-server openssl \
+    && apt-get install -y nano git openssh-server openssl \
     && mkdir /run/sshd \
     && sed -e 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' -i /etc/ssh/sshd_config \
     && sed -e 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' -i /etc/ssh/sshd_config \
