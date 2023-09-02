@@ -8,7 +8,7 @@ namespace FradminDomain.UnitTest.Repositories;
 public class AdminGroupRepositoryUnitTests
 {
     private readonly AdminGroupRepository _repository = new AdminGroupRepository(
-        new PostgresConnection("localhost", "33000", "dev", "dev", "db_frdbadmin"));
+        new PostgresConnection("psqldb", "5432", "dev", "dev", "db_frdbadmin"));
 
     [Fact]
     public async Task GetByName_NotFound_ReturnNull()
@@ -21,17 +21,30 @@ public class AdminGroupRepositoryUnitTests
     [Fact]
     public async Task GetByName_Found_ReturnTheEntity()
     {
-        var name = Guid.NewGuid().ToString()[..16];
-
-        var newGroup = new AdminGroup { Name = name, Rules = new HashSet<Rules>(new[] { (Rules)1 }) };
+        var newGroup = new AdminGroup { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)1 }) };
         await _repository.Insert(newGroup);
 
-        var actual = await _repository.GetByName(name)!;
+        var actual = await _repository.GetByName(newGroup.Name)!;
 
         Assert.NotNull(actual);
         Assert.True(actual.Id > 0);
-        Assert.Equal(name, actual.Name);
+        Assert.Equal(newGroup.Name, actual.Name);
         Assert.NotEmpty(actual.Rules);
+    }
+    
+    [Fact]
+    public async Task GetAll_InsertAdminGroup_ReturnAListGreaterThanOrEqual1(){
+        var rulesArray = new[] { (Rules)1000, (Rules)2000 };
+        var newGroup = new AdminGroup { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(rulesArray) };
+        await _repository.Insert(newGroup);
+
+        var allGroups = await _repository.GetAll();
+        
+        Assert.True(allGroups.Count > 1);
+
+        var groupCreated = allGroups.First(group => group.Name.Equals(newGroup.Name));
+        
+        Assert.True(groupCreated.Rules.SetEquals(rulesArray));
     }
 
     [Fact]

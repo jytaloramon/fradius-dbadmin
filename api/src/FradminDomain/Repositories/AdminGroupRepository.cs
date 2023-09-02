@@ -45,6 +45,41 @@ public class AdminGroupRepository : IAdminGroupRepository
         }
     }
 
+    public Task<List<AdminGroup>> GetAll()
+    {
+        const string sql = "SELECT admg_id, admg_name, rule_id FROM tb_admin_group INNER JOIN tb_rule ON admg_id = rule_admg_id";
+        
+        using var connection = _bd.GetDbConnection();
+        
+        try
+        {
+            var result = connection.ExecuteReader(sql);
+
+            var groups = new Dictionary<short, AdminGroup>();
+            
+            while (result.Read())
+            {
+                var idGroup = result.GetInt16(0);
+
+                if (!groups.ContainsKey(idGroup))
+                {
+                    var group = new AdminGroup
+                        { Id = idGroup, Name = result.GetString(1), Rules = new HashSet<Rules>() };
+                    
+                    groups.Add(idGroup, group);
+                }
+
+                groups[idGroup].Rules.Add((Rules)result.GetInt16(2));
+            }
+
+            return Task.FromResult(groups.Values.ToList());
+        }
+        catch (DbException e)
+        {
+            throw _bd.ExceptionHandler.Handler(e);
+        }
+    }
+
     public Task<AdminGroup> Insert(AdminGroup adminGroup)
     {
         const string sqlInsertGroup = "INSERT INTO tb_admin_group (admg_name) VALUES (@Name) RETURNING admg_id";
@@ -61,13 +96,13 @@ public class AdminGroupRepository : IAdminGroupRepository
 
             var rulesToInsert = adminGroup.Rules.Select(rule => new { Id = (short)rule, IdGroup = idGen });
 
-            var rowAffected = connection.Execute(sqlInsertRule, rulesToInsert, transaction);
+            connection.Execute(sqlInsertRule, rulesToInsert, transaction);
 
             transaction.Commit();
 
             var adminGroupInserted = new AdminGroup { Id = idGen, Name = adminGroup.Name, Rules = adminGroup.Rules };
 
-            return Task.FromResult<AdminGroup>(adminGroupInserted);
+            return Task.FromResult(adminGroupInserted);
         }
         catch (DbException e)
         {
