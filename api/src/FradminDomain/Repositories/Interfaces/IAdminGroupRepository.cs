@@ -5,12 +5,20 @@ namespace FradminDomain.Repositories.Interfaces;
 public interface IAdminGroupRepository
 {
     /**
+     * Get AdminGroup by ID.
+     * <exception cref="Exception"></exception>
+     * <exception cref="BaseException"></exception>
+     * <returns>AdminGroup found, or null if not.</returns>
+     */
+    public Task<AdminGroup?> GetById(short id);
+
+    /**
      * Get AdminGroup by name.
      * <exception cref="Exception"></exception>
      * <exception cref="BaseException"></exception>
      * <returns>AdminGroup found, or null if not.</returns>
      */
-    public Task<AdminGroup>? GetByName(string name);
+    public Task<AdminGroup?> GetByName(string name);
 
     /**
      * Get all AdminGroup.

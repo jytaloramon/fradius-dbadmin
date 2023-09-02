@@ -16,7 +16,33 @@ public class AdminGroupRepository : IAdminGroupRepository
         _bd = bd;
     }
 
-    public Task<AdminGroup>? GetByName(string name)
+    public Task<AdminGroup?> GetById(short id)
+    {
+        const string sql =
+            "SELECT admg_name, rule_id FROM tb_admin_group INNER JOIN tb_rule ON admg_id = rule_admg_id WHERE admg_id = @Id";
+
+        using var connection = _bd.GetDbConnection();
+
+        try
+        {
+            var result = connection.ExecuteReader(sql, new { Id = id });
+
+            if (!result.Read()) return Task.FromResult<AdminGroup?>(null);
+
+            var name = result.GetString(0);
+            var rules = new List<Rules>() { (Rules)result.GetInt16(1) };
+
+            while (result.Read()) rules.Add((Rules)result.GetInt16(1));
+
+            return Task.FromResult<AdminGroup?>(new AdminGroup { Id = id, Name = name, Rules = new HashSet<Rules>(rules) });
+        }
+        catch (DbException e)
+        {
+            throw _bd.ExceptionHandler.Handler(e);
+        }
+    }
+
+    public Task<AdminGroup?> GetByName(string name)
     {
         const string sql =
             "SELECT admg_id, rule_id FROM tb_admin_group INNER JOIN tb_rule ON admg_id = rule_admg_id WHERE admg_name = @Name";
@@ -27,17 +53,14 @@ public class AdminGroupRepository : IAdminGroupRepository
         {
             var result = connection.ExecuteReader(sql, new { Name = name });
 
-            if (!result.Read()) return Task.FromResult<AdminGroup>(null!);
+            if (!result.Read()) return Task.FromResult<AdminGroup?>(null);
 
             var id = result.GetInt16(0);
             var rules = new List<Rules>() { (Rules)result.GetInt16(1) };
 
-            while (result.Read())
-            {
-                rules.Add((Rules)result.GetInt16(1));
-            }
+            while (result.Read()) rules.Add((Rules)result.GetInt16(1));
 
-            return Task.FromResult(new AdminGroup { Id = id, Name = name, Rules = new HashSet<Rules>(rules) });
+            return Task.FromResult<AdminGroup?>(new AdminGroup { Id = id, Name = name, Rules = new HashSet<Rules>(rules) });
         }
         catch (DbException e)
         {
@@ -48,15 +71,15 @@ public class AdminGroupRepository : IAdminGroupRepository
     public Task<List<AdminGroup>> GetAll()
     {
         const string sql = "SELECT admg_id, admg_name, rule_id FROM tb_admin_group INNER JOIN tb_rule ON admg_id = rule_admg_id";
-        
+
         using var connection = _bd.GetDbConnection();
-        
+
         try
         {
             var result = connection.ExecuteReader(sql);
 
             var groups = new Dictionary<short, AdminGroup>();
-            
+
             while (result.Read())
             {
                 var idGroup = result.GetInt16(0);
@@ -64,8 +87,8 @@ public class AdminGroupRepository : IAdminGroupRepository
                 if (!groups.ContainsKey(idGroup))
                 {
                     var group = new AdminGroup
-                        { Id = idGroup, Name = result.GetString(1), Rules = new HashSet<Rules>() };
-                    
+                    { Id = idGroup, Name = result.GetString(1), Rules = new HashSet<Rules>() };
+
                     groups.Add(idGroup, group);
                 }
 

@@ -17,6 +17,15 @@ public class AdminGroupUseCase : IAdminGroupUseCase
         _repository = repository;
     }
 
+    public async Task<AdminGroupFullDto?> GetById(short id)
+    {
+        var group = await _repository.GetById(id);
+
+        if (group == null) return null;
+
+        return new AdminGroupFullDto(group.Id, group.Name, group.Rules.ToArray());
+    }
+
     public async Task<List<AdminGroupFullDto>> GetAll()
     {
         var allGroups = await _repository.GetAll();
