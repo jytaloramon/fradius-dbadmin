@@ -34,7 +34,7 @@ public class AdminRepository : IAdminRepository
                 Group = new AdminGroup { Id = result.GetInt16(0) },
                 Username = result.GetString(1),
                 Email = result.GetString(2),
-                isActive = result.GetBoolean(3),
+                IsActive = result.GetBoolean(3),
             };
 
             return Task.FromResult<Admin?>(admin);
@@ -64,7 +64,7 @@ public class AdminRepository : IAdminRepository
                 Group = new AdminGroup { Id = result.GetInt16(1) },
                 Username = username,
                 Email = result.GetString(2),
-                isActive = result.GetBoolean(3),
+                IsActive = result.GetBoolean(3),
             };
 
             return Task.FromResult<Admin?>(admin);
@@ -95,7 +95,7 @@ public class AdminRepository : IAdminRepository
                     Group = new AdminGroup { Id = result.GetInt16(1) },
                     Username = result.GetString(2),
                     Email = result.GetString(3),
-                    isActive = result.GetBoolean(4),
+                    IsActive = result.GetBoolean(4),
                 };
 
                 admins.Add(adm);
@@ -116,7 +116,7 @@ public class AdminRepository : IAdminRepository
             "VALUES (@Username, @Email, @Password, @AdminGroupId, @IsActive)";
 
         var entity = new
-            { admin.Username, admin.Email, admin.Password, AdminGroupId = admin.Group.Id, IsActive = admin.isActive };
+            { admin.Username, admin.Email, admin.Password, AdminGroupId = admin.Group.Id, IsActive = admin.IsActive };
 
         using var connection = _bd.GetDbConnection();
 

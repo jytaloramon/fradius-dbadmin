@@ -11,6 +11,17 @@ public class AdminGroupFactory : BaseFactory<AdminGroup>, IAdminGroupFactory
     {
     }
 
+    public AdminGroup Create(short id)
+    {
+        var adminGroup = new AdminGroup { Id = id };
+
+        var result = RunValidator(adminGroup, "Id");
+
+        if (result.IsValid) return adminGroup;
+
+        throw CreateEntityValidationException(result.Errors);
+    }
+
     public AdminGroup Create(string name, HashSet<Rules> rules)
     {
         var adminGroup = new AdminGroup { Name = name, Rules = rules };

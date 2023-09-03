@@ -30,7 +30,28 @@ public class AdminGroupFactoryUnitTests : BaseUnitTestsFactory<AdminGroup>
     }
 
     [Fact]
-    public void Create_NameAndRules_ThrowEntityValidationException()
+    public void Create_IdWithAllInvalid_ThrowEntityValidationException()
+    {
+        var factory = new AdminGroupFactory(GetValidatorAllInvalid());
+        var actual = Assert.Throws<EntityValidationException>(() => { factory.Create(0); });
+
+        Assert.Single(actual.Errors);
+        Assert.True(actual.Errors.ContainsKey("Id"));
+    }
+
+    [Fact]
+    public void Create_IdWithAllValid_ReturnTheEntity()
+    {
+        const short id = 1000;
+
+        var factory = new AdminGroupFactory(GetValidatorAllValid());
+        var actual = factory.Create(id);
+
+        Assert.Equal(id, actual.Id);
+    }
+
+    [Fact]
+    public void Create_NameAndRulesWithAllInvalid_ThrowEntityValidationException()
     {
         var factory = new AdminGroupFactory(GetValidatorAllInvalid());
         var actual = Assert.Throws<EntityValidationException>(() => { factory.Create("a", new HashSet<Rules>()); });
@@ -41,7 +62,7 @@ public class AdminGroupFactoryUnitTests : BaseUnitTestsFactory<AdminGroup>
     }
 
     [Fact]
-    public void Create_NameAndRules_ReturnEntity()
+    public void Create_NameAndRulesWithAllValid_ReturnEntity()
     {
         const string name = "a";
         var rules = new[] { (Rules)1, (Rules)2 };
