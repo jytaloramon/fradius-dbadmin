@@ -26,7 +26,7 @@ public class AdminRepositoryUnitTests
             Email = Guid.NewGuid().ToString()[0..16],
             Password = "12345678",
             Group = new AdminGroup { Id = 1 },
-            isActive = true
+            IsActive = true
         };
 
         await _repository.Insert(admin);
@@ -37,7 +37,7 @@ public class AdminRepositoryUnitTests
         Assert.True(adminFound.Id > 0);
         Assert.Equal(admin.Username, adminFound.Username);
         Assert.Equal(admin.Email, adminFound.Email);
-        Assert.Equal(admin.isActive, adminFound.isActive);
+        Assert.Equal(admin.IsActive, adminFound.IsActive);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class AdminRepositoryUnitTests
             Email = Guid.NewGuid().ToString()[0..16],
             Password = "12345678",
             Group = new AdminGroup { Id = 1 },
-            isActive = true
+            IsActive = true
         };
 
         await _repository.Insert(admin);
@@ -67,7 +67,7 @@ public class AdminRepositoryUnitTests
         Assert.True(adminFound.Id > 0);
         Assert.Equal(admin.Username, adminFound.Username);
         Assert.Equal(admin.Email, adminFound.Email);
-        Assert.Equal(admin.isActive, adminFound.isActive);
+        Assert.Equal(admin.IsActive, adminFound.IsActive);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class AdminRepositoryUnitTests
             Email = Guid.NewGuid().ToString()[0..16],
             Password = "12345678",
             Group = new AdminGroup { Id = 1 },
-            isActive = true
+            IsActive = true
         };
 
         await _repository.Insert(admin);
@@ -97,7 +97,7 @@ public class AdminRepositoryUnitTests
             Email = Guid.NewGuid().ToString()[0..16],
             Password = "12345678",
             Group = new AdminGroup { Id = 1 },
-            isActive = true
+            IsActive = true
         };
 
         var affectedRow = await _repository.Insert(admin);
