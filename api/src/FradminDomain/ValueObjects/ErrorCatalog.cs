@@ -13,4 +13,6 @@ public static class ErrorCatalog
     public static readonly ErroFormat Required = new ErroFormat("AAAAD", "AAAAD");
 
     public static readonly ErroFormat NotFound = new ErroFormat("AAAAE", "AAAAE");
+
+    public static readonly ErroFormat InvalidFormat = new ErroFormat("AAAAF", "AAAAF");
 }
