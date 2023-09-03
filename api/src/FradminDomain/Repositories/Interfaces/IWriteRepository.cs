@@ -8,5 +8,5 @@ public interface IWriteRepository<T>
      * <exception cref="BaseException"></exception>
      * <returns>The number of rows affected.</returns>
      */
-    public Task<int> Insert(T e);
+    public Task<int> Save(T e);
 }

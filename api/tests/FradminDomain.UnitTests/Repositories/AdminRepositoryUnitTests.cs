@@ -29,7 +29,7 @@ public class AdminRepositoryUnitTests
             IsActive = true
         };
 
-        await _repository.Insert(admin);
+        await _repository.Save(admin);
         var idFind = (await _repository.GetByUsername(admin.Username))!.Id;
         var adminFound = await _repository.GetById(idFind);
 
@@ -60,7 +60,7 @@ public class AdminRepositoryUnitTests
             IsActive = true
         };
 
-        await _repository.Insert(admin);
+        await _repository.Save(admin);
         var adminFound = await _repository.GetByUsername(admin.Username);
 
         Assert.NotNull(adminFound);
@@ -82,14 +82,14 @@ public class AdminRepositoryUnitTests
             IsActive = true
         };
 
-        await _repository.Insert(admin);
+        await _repository.Save(admin);
         var allAdmins = await _repository.GetAll();
 
         Assert.NotEmpty(allAdmins);
     }
 
     [Fact]
-    public async Task Insert_Admin_ReturnTheEntityWithIdGreaterThan0()
+    public async Task Save_Admin_ReturnTheEntityWithIdGreaterThan0()
     {
         var admin = new Admin
         {
@@ -100,7 +100,7 @@ public class AdminRepositoryUnitTests
             IsActive = true
         };
 
-        var affectedRow = await _repository.Insert(admin);
+        var affectedRow = await _repository.Save(admin);
 
         Assert.True(affectedRow > 0);
     }

@@ -26,7 +26,7 @@ public class AdminUseCase : IAdminUseCase
             adminDto.Password ?? Guid.NewGuid().ToString()[0..12], new AdminGroup { Id = adminDto.GroupId },
             adminDto.IsActive);
 
-        if (await _repository.Insert(admin) < 1)
+        if (await _repository.Save(admin) < 1)
         {
             throw new GenericException(new Dictionary<string, object>()
             {

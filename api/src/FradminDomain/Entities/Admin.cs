@@ -12,5 +12,5 @@ public class Admin
 
     public AdminGroup Group { get; set; } = new AdminGroup();
 
-    public bool isActive { get; set; } = true;
+    public bool IsActive { get; set; } = true;
 }

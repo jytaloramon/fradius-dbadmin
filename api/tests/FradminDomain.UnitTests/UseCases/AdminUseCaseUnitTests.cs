@@ -33,12 +33,12 @@ public class AdminUseCaseUnitTests
     }
 
     [Fact]
-    public async Task Add_RepositoryInsertThrowGenericException_ThrowGenericException()
+    public async Task Add_RepositorySaveThrowGenericException_ThrowGenericException()
     {
         var factoryMock = new Mock<IAdminFactory>();
 
         var repositoryMock = new Mock<IAdminRepository>();
-        repositoryMock.Setup(repository => repository.Insert(It.IsAny<Admin>()))
+        repositoryMock.Setup(repository => repository.Save(It.IsAny<Admin>()))
             .Throws(new GenericException(new Dictionary<string, object>() { ["message"] = "Test" }
                 .ToImmutableDictionary()));
 
@@ -53,7 +53,7 @@ public class AdminUseCaseUnitTests
     }
 
     [Fact]
-    public async Task Add_RepositoryInsertReturn0_ThrowGenericException()
+    public async Task Add_RepositorySaveReturn0_ThrowGenericException()
     {
         var adminValidMock = new Admin
         {
@@ -66,7 +66,7 @@ public class AdminUseCaseUnitTests
             .Returns(adminValidMock);
 
         var repositoryMock = new Mock<IAdminRepository>();
-        repositoryMock.Setup(repository => repository.Insert(It.IsAny<Admin>()))
+        repositoryMock.Setup(repository => repository.Save(It.IsAny<Admin>()))
             .Returns(Task.FromResult(0));
 
         var useCase = new AdminUseCase(factoryMock.Object, repositoryMock.Object);
@@ -100,7 +100,7 @@ public class AdminUseCaseUnitTests
             .Returns(adminValidMock);
 
         var repositoryMock = new Mock<IAdminRepository>();
-        repositoryMock.Setup(repository => repository.Insert(adminValidMock))
+        repositoryMock.Setup(repository => repository.Save(adminValidMock))
             .Returns(Task.FromResult(1));
         repositoryMock.Setup(repository => repository.GetByUsername("a"))
             .Returns(Task.FromResult<Admin?>(adminCreatedMock));
@@ -137,7 +137,7 @@ public class AdminUseCaseUnitTests
             .Returns(adminValidMock);
 
         var repositoryMock = new Mock<IAdminRepository>();
-        repositoryMock.Setup(repository => repository.Insert(adminValidMock))
+        repositoryMock.Setup(repository => repository.Save(adminValidMock))
             .Returns(Task.FromResult(1));
         repositoryMock.Setup(repository => repository.GetByUsername("a"))
             .Returns(Task.FromResult<Admin?>(adminCreatedMock));

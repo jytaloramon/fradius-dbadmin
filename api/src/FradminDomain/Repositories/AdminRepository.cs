@@ -109,7 +109,7 @@ public class AdminRepository : IAdminRepository
         }
     }
 
-    public Task<int> Insert(Admin admin)
+    public Task<int> Save(Admin admin)
     {
         const string sql =
             "INSERT INTO tb_admin (adm_username, adm_email, adm_password_hash, adm_admg_id, adm_is_active)" +
