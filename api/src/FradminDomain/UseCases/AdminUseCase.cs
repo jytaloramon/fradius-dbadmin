@@ -20,6 +20,14 @@ public class AdminUseCase : IAdminUseCase
         _repository = repository;
     }
 
+    public async Task<List<AdminFullDto>> GetAll()
+    {
+        var admins = await _repository.GetAll();
+
+        return admins.Select(admin =>
+            new AdminFullDto(admin.Id, admin.Username, admin.Email, admin.Group.Id, admin.IsActive)).ToList();
+    }
+
     public async Task<AdminFullDto> Add(AdminAddDto adminDto)
     {
         var admin = _factory.Create(adminDto.Username, adminDto.Email,

@@ -11,9 +11,14 @@ public sealed class PostgresExceptionHandler : ISgbdExceptionHandler
     public BaseException Handler(DbException dbException)
     {
         var psqlExcept = (PostgresException)dbException;
-        
-        var except = psqlExcept.SqlState switch
+
+        BaseException except = psqlExcept.SqlState switch
         {
+            "23503" => new UnsatisfiedDependencyException(CreateDic(new[]
+            {
+                new KeyValuePair<string, object>("entity", NormalizeTableName(psqlExcept.TableName)),
+                new KeyValuePair<string, object>("attr", NormalizeConstraintName(psqlExcept.ConstraintName)),
+            })),
             "23505" => new EntityConflictException(CreateDic(new[]
             {
                 new KeyValuePair<string, object>("entity", NormalizeTableName(psqlExcept.TableName)),

@@ -12,6 +12,47 @@ namespace FradminDomain.UnitTest.UseCases;
 public class AdminUseCaseUnitTests
 {
     [Fact]
+    public async Task GetAll_RepositoryGetAllThrowGenericException_ThrowGenericException()
+    {
+        var factoryMock = new Mock<IAdminFactory>();
+
+        var repositoryMock = new Mock<IAdminRepository>();
+        repositoryMock.Setup(repository => repository.GetAll())
+            .Throws(new GenericException(new Dictionary<string, object>() { ["message"] = "Test" }
+                .ToImmutableDictionary()));
+
+        var useCase = new AdminUseCase(factoryMock.Object, repositoryMock.Object);
+
+        var except = await Assert.ThrowsAsync<GenericException>(async () => { await useCase.GetAll(); });
+
+        Assert.True(except.Errors.ContainsKey("message"));
+    }
+
+    [Fact]
+    public async Task GetAll_RepositoryGetAllReturnNonEmptyList_ReturnTheList()
+    {
+        var repoListMock = new[]
+        {
+            new Admin { Id = 1000, Username = "1000", Email = "1000@", Password = "1000", IsActive = true },
+            new Admin { Id = 2000, Username = "2000", Email = "2000@", Password = "2000", IsActive = true }
+        };
+
+        var factoryMock = new Mock<IAdminFactory>();
+
+        var repositoryMock = new Mock<IAdminRepository>();
+        repositoryMock.Setup(repository => repository.GetAll())
+            .Returns(Task.FromResult<IEnumerable<Admin>>(repoListMock));
+
+        var useCase = new AdminUseCase(factoryMock.Object, repositoryMock.Object);
+
+        var admins = await useCase.GetAll();
+
+        Assert.Equal(2, admins.Count);
+        Assert.True(admins.FindIndex(adm => adm.Id == 1000) != -1);
+        Assert.True(admins.FindIndex(adm => adm.Id == 2000) != -1);
+    }
+
+    [Fact]
     public async Task Add_FactoryCreateThrowEntityValidationException_ThrowEntityValidationException()
     {
         var factoryMock = new Mock<IAdminFactory>();
