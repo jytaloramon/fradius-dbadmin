@@ -12,7 +12,7 @@ services:
     container_name: frdba-dev-web
     ports:
       - '127.0.0.1:35100:22'
-      - '127.0.0.1:35000:80'
+      - '127.0.0.1:35000:35000'
     volumes:
       - $(pwd)/app:/app
     networks:
@@ -24,8 +24,8 @@ services:
     build:
       context: api
       args:
-        - PUID=1000
-        - PGID=984
+        - PUID=1024
+        - PGID=1024
       target: dev
     container_name: frdba-dev-api
     ports:
