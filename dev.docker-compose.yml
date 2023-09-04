@@ -8,9 +8,10 @@ services:
       args:
         - PUID=1024
         - PGID=1024
+      target: dev
     container_name: frdba-dev-web
     ports:
-      - '127.0.0.1:35000:22'
+      - '127.0.0.1:35100:22'
       - '127.0.0.1:35000:80'
     volumes:
       - $(pwd)/app:/app
