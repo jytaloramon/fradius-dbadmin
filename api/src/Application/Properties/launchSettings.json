@@ -16,7 +16,12 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://0.0.0.0:5046",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DB_HOST": "psqldb",
+        "DB_PORT": "5432",
+        "DB_USER": "dev",
+        "DB_PASSWORD": "dev",
+        "DB_NAME": "db_frdbadmin"
       }
     },
     "IIS Express": {
