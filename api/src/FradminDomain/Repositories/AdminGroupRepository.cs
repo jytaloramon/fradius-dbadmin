@@ -16,7 +16,7 @@ public class AdminGroupRepository : IAdminGroupRepository
         _bd = bd;
     }
 
-    public Task<AdminGroup?> GetById(short id)
+    public Task<AdminGroup?> GetById(int id)
     {
         const string sql =
             "SELECT admg_name, rule_id FROM tb_admin_group INNER JOIN tb_rule ON admg_id = rule_admg_id WHERE admg_id = @Id";
@@ -30,11 +30,12 @@ public class AdminGroupRepository : IAdminGroupRepository
             if (!result.Read()) return Task.FromResult<AdminGroup?>(null);
 
             var name = result.GetString(0);
-            var rules = new List<Rules>() { (Rules)result.GetInt16(1) };
+            var rules = new List<Rules>() { (Rules)result.GetInt32(1) };
 
-            while (result.Read()) rules.Add((Rules)result.GetInt16(1));
+            while (result.Read()) rules.Add((Rules)result.GetInt32(1));
 
-            return Task.FromResult<AdminGroup?>(new AdminGroup { Id = id, Name = name, Rules = new HashSet<Rules>(rules) });
+            return Task.FromResult<AdminGroup?>(new AdminGroup
+                { Id = id, Name = name, Rules = new HashSet<Rules>(rules) });
         }
         catch (DbException e)
         {
@@ -55,12 +56,13 @@ public class AdminGroupRepository : IAdminGroupRepository
 
             if (!result.Read()) return Task.FromResult<AdminGroup?>(null);
 
-            var id = result.GetInt16(0);
-            var rules = new List<Rules>() { (Rules)result.GetInt16(1) };
+            var id = result.GetInt32(0);
+            var rules = new List<Rules>() { (Rules)result.GetInt32(1) };
 
-            while (result.Read()) rules.Add((Rules)result.GetInt16(1));
+            while (result.Read()) rules.Add((Rules)result.GetInt32(1));
 
-            return Task.FromResult<AdminGroup?>(new AdminGroup { Id = id, Name = name, Rules = new HashSet<Rules>(rules) });
+            return Task.FromResult<AdminGroup?>(new AdminGroup
+                { Id = id, Name = name, Rules = new HashSet<Rules>(rules) });
         }
         catch (DbException e)
         {
@@ -68,9 +70,10 @@ public class AdminGroupRepository : IAdminGroupRepository
         }
     }
 
-    public Task<List<AdminGroup>> GetAll()
+    public Task<IEnumerable<AdminGroup>> GetAll()
     {
-        const string sql = "SELECT admg_id, admg_name, rule_id FROM tb_admin_group INNER JOIN tb_rule ON admg_id = rule_admg_id";
+        const string sql =
+            "SELECT admg_id, admg_name, rule_id FROM tb_admin_group INNER JOIN tb_rule ON admg_id = rule_admg_id";
 
         using var connection = _bd.GetDbConnection();
 
@@ -78,16 +81,16 @@ public class AdminGroupRepository : IAdminGroupRepository
         {
             var result = connection.ExecuteReader(sql);
 
-            var groups = new Dictionary<short, AdminGroup>();
+            var groups = new Dictionary<int, AdminGroup>();
 
             while (result.Read())
             {
-                var idGroup = result.GetInt16(0);
+                var idGroup = result.GetInt32(0);
 
                 if (!groups.ContainsKey(idGroup))
                 {
                     var group = new AdminGroup
-                    { Id = idGroup, Name = result.GetString(1), Rules = new HashSet<Rules>() };
+                        { Id = idGroup, Name = result.GetString(1), Rules = new HashSet<Rules>() };
 
                     groups.Add(idGroup, group);
                 }
@@ -95,7 +98,7 @@ public class AdminGroupRepository : IAdminGroupRepository
                 groups[idGroup].Rules.Add((Rules)result.GetInt16(2));
             }
 
-            return Task.FromResult(groups.Values.ToList());
+            return Task.FromResult<IEnumerable<AdminGroup>>(groups.Values.ToList());
         }
         catch (DbException e)
         {
@@ -103,7 +106,7 @@ public class AdminGroupRepository : IAdminGroupRepository
         }
     }
 
-    public Task<AdminGroup> Insert(AdminGroup adminGroup)
+    public Task<int> Save(AdminGroup adminGroup)
     {
         const string sqlInsertGroup = "INSERT INTO tb_admin_group (admg_name) VALUES (@Name) RETURNING admg_id";
         const string sqlInsertRule = "INSERT INTO tb_rule (rule_id, rule_admg_id) VALUES (@Id, @IdGroup)";
@@ -116,16 +119,12 @@ public class AdminGroupRepository : IAdminGroupRepository
         try
         {
             var idGen = connection.ExecuteScalar<short>(sqlInsertGroup, adminGroup, transaction);
-
             var rulesToInsert = adminGroup.Rules.Select(rule => new { Id = (short)rule, IdGroup = idGen });
-
-            connection.Execute(sqlInsertRule, rulesToInsert, transaction);
+            var affectedRow = connection.Execute(sqlInsertRule, rulesToInsert, transaction);
 
             transaction.Commit();
 
-            var adminGroupInserted = new AdminGroup { Id = idGen, Name = adminGroup.Name, Rules = adminGroup.Rules };
-
-            return Task.FromResult(adminGroupInserted);
+            return Task.FromResult(affectedRow + 1);
         }
         catch (DbException e)
         {

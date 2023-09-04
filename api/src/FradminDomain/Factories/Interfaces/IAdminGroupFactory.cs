@@ -11,7 +11,7 @@ public interface IAdminGroupFactory
      * <exception cref="EntityValidationException"></exception>
      * <returns>Group Created.</returns>
      */
-    public AdminGroup Create(short id);
+    public AdminGroup Create(int id);
     
     /**
      * Create a new AdminGroup.

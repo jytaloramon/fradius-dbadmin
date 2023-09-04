@@ -5,12 +5,12 @@ namespace FradminDomain.UseCases.Interfaces;
 public interface IAdminGroupUseCase
 {
     /**
-     * Get AdminGroup by name.
+     * Get AdminGroup by Id.
      * <exception cref="Exception"></exception>.
      * <exception cref="BaseException"></exception>
      * <returns>AdminGroup found, or null if not.</returns>
      */
-    public Task<AdminGroupFullDto?> GetById(short id);
+    public Task<AdminGroupFullDto?> GetById(int id);
 
     /**
      * Get all AdminGroup.
@@ -26,5 +26,5 @@ public interface IAdminGroupUseCase
      * <exception cref="BaseException"></exception>
      * <returns>AdminGroup Created.</returns>
      */
-    public Task<AdminGroupFullDto> Add(AdminGroupNewDto groupDto);
+    public Task<AdminGroupFullDto> Add(AdminGroupAddDto groupDto);
 }

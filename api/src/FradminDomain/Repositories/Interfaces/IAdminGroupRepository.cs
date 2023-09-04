@@ -2,16 +2,9 @@ using FradminDomain.Entities;
 
 namespace FradminDomain.Repositories.Interfaces;
 
-public interface IAdminGroupRepository
+public interface IAdminGroupRepository : IReadAllRepository<AdminGroup>, IReadByIdRepository<AdminGroup>,
+    IWriteRepository<AdminGroup>
 {
-    /**
-     * Get AdminGroup by ID.
-     * <exception cref="Exception"></exception>
-     * <exception cref="BaseException"></exception>
-     * <returns>AdminGroup found, or null if not.</returns>
-     */
-    public Task<AdminGroup?> GetById(short id);
-
     /**
      * Get AdminGroup by name.
      * <exception cref="Exception"></exception>
@@ -19,20 +12,4 @@ public interface IAdminGroupRepository
      * <returns>AdminGroup found, or null if not.</returns>
      */
     public Task<AdminGroup?> GetByName(string name);
-
-    /**
-     * Get all AdminGroup.
-     * <exception cref="Exception"></exception>
-     * <exception cref="BaseException"></exception>
-     * <returns>AdminGroup List.</returns>
-     */
-    public Task<List<AdminGroup>> GetAll();
-
-    /**
-     * Add a new AdminGroup.
-     * <exception cref="Exception"></exception>
-     * <exception cref="BaseException"></exception>
-     * <returns>AdminGroup added.</returns>
-     */
-    public Task<AdminGroup> Insert(AdminGroup adminGroup);
 }

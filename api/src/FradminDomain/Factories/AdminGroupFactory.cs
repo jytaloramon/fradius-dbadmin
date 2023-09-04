@@ -11,7 +11,7 @@ public class AdminGroupFactory : BaseFactory<AdminGroup>, IAdminGroupFactory
     {
     }
 
-    public AdminGroup Create(short id)
+    public AdminGroup Create(int id)
     {
         var adminGroup = new AdminGroup { Id = id };
 

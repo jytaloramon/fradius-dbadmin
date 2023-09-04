@@ -89,7 +89,7 @@ public class AdminRepositoryUnitTests
     }
 
     [Fact]
-    public async Task Save_Admin_ReturnTheEntityWithIdGreaterThan0()
+    public async Task Save_Admin_ReturnValueGreaterThan0()
     {
         var admin = new Admin
         {

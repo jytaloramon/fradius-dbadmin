@@ -13,8 +13,8 @@ public class AdminGroupValidationUnitTests : BaseUnitTestsEntityValidation<Admin
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    [InlineData(-(1 << 15))]
-    public void PropertyId_LessThanOrEqualTo0_ReturnInvalidResult(short id)
+    [InlineData(-(1 << 30))]
+    public void PropertyId_LessThanOrEqualTo0_ReturnInvalidResult(int id)
     {
         const string property = "Id";
         var adminGroup = new AdminGroup { Id = id };
@@ -28,8 +28,8 @@ public class AdminGroupValidationUnitTests : BaseUnitTestsEntityValidation<Admin
 
     [Theory]
     [InlineData(1)]
-    [InlineData((1 << 15) - 1)]
-    public void PropertyId_GreaterThan0_ReturnValidResult(short id)
+    [InlineData((1 << 30) - 1)]
+    public void PropertyId_GreaterThan0_ReturnValidResult(int id)
     {
         var adminGroup = new AdminGroup { Id = id };
         var actual = RunValidator(adminGroup, "Id");

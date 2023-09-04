@@ -1,4 +1,6 @@
+using System.Collections.Immutable;
 using FradminDomain.DTOs;
+using FradminDomain.Exceptions;
 using FradminDomain.Factories.Interfaces;
 using FradminDomain.Repositories.Interfaces;
 using FradminDomain.UseCases.Interfaces;
@@ -17,13 +19,11 @@ public class AdminGroupUseCase : IAdminGroupUseCase
         _repository = repository;
     }
 
-    public async Task<AdminGroupFullDto?> GetById(short id)
+    public async Task<AdminGroupFullDto?> GetById(int id)
     {
         var group = await _repository.GetById(id);
 
-        if (group == null) return null;
-
-        return new AdminGroupFullDto(group.Id, group.Name, group.Rules.ToArray());
+        return group != null ? new AdminGroupFullDto(group.Id, group.Name, group.Rules.ToArray()) : null;
     }
 
     public async Task<List<AdminGroupFullDto>> GetAll()
@@ -33,11 +33,20 @@ public class AdminGroupUseCase : IAdminGroupUseCase
         return allGroups.Select(group => new AdminGroupFullDto(group.Id, group.Name, group.Rules.ToArray())).ToList();
     }
 
-    public async Task<AdminGroupFullDto> Add(AdminGroupNewDto groupDto)
+    public async Task<AdminGroupFullDto> Add(AdminGroupAddDto groupDto)
     {
         var group = _factory.Create(groupDto.Name, groupDto.Rules.ToHashSet());
-        var groupCreated = await _repository.Insert(group);
 
-        return new AdminGroupFullDto(groupCreated.Id, groupCreated.Name, groupCreated.Rules.ToArray());
+        if (await _repository.Save(group) < 1)
+        {
+            throw new GenericException(new Dictionary<string, object>()
+            {
+                ["message"] = "Error in server."
+            }.ToImmutableDictionary());
+        }
+
+        var groupCreated = await _repository.GetByName(group.Name);
+
+        return new AdminGroupFullDto(groupCreated!.Id, groupCreated.Name, groupCreated.Rules.ToArray());
     }
 }

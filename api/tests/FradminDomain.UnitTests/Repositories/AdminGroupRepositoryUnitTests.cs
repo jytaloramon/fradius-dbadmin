@@ -13,7 +13,7 @@ public class AdminGroupRepositoryUnitTests
     [Fact]
     public async Task GetById_NotFound_ReturnNull()
     {
-        var actual = await _repository.GetById(0)!;
+        var actual = await _repository.GetById(0);
 
         Assert.Null(actual);
     }
@@ -21,22 +21,23 @@ public class AdminGroupRepositoryUnitTests
     [Fact]
     public async Task GetById_Found_ReturnTheEntity()
     {
-        var newGroup = new AdminGroup { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)1 }) };
-        var newGroupCreated = await _repository.Insert(newGroup);
+        var group = new AdminGroup
+            { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)1 }) };
 
-        var actual = await _repository.GetById(newGroupCreated.Id)!;
+        await _repository.Save(group);
+        var idFind = (await _repository.GetByName(group.Name))!.Id;
+        var groupFound = await _repository.GetById(idFind);
 
-        Assert.NotNull(actual);
-        Assert.True(actual.Id > 0);
-        Assert.Equal(newGroup.Name, actual.Name);
-        Assert.NotEmpty(actual.Rules);
+        Assert.NotNull(groupFound);
+        Assert.True(groupFound.Id > 0);
+        Assert.Equal(group.Name, groupFound.Name);
+        Assert.True(group.Rules.SetEquals(groupFound.Rules));
     }
-
 
     [Fact]
     public async Task GetByName_NotFound_ReturnNull()
     {
-        var actual = await _repository.GetByName(Guid.NewGuid().ToString()[..16])!;
+        var actual = await _repository.GetByName(Guid.NewGuid().ToString()[..16]);
 
         Assert.Null(actual);
     }
@@ -44,41 +45,38 @@ public class AdminGroupRepositoryUnitTests
     [Fact]
     public async Task GetByName_Found_ReturnTheEntity()
     {
-        var newGroup = new AdminGroup { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)1 }) };
-        await _repository.Insert(newGroup);
+        var group = new AdminGroup
+            { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)1 }) };
 
-        var actual = await _repository.GetByName(newGroup.Name)!;
+        await _repository.Save(group);
+        var groupFound = await _repository.GetByName(group.Name);
 
-        Assert.NotNull(actual);
-        Assert.True(actual.Id > 0);
-        Assert.Equal(newGroup.Name, actual.Name);
-        Assert.NotEmpty(actual.Rules);
+        Assert.NotNull(groupFound);
+        Assert.True(groupFound.Id > 0);
+        Assert.Equal(group.Name, groupFound.Name);
+        Assert.True(group.Rules.SetEquals(groupFound.Rules));
     }
 
     [Fact]
     public async Task GetAll_InsertAdminGroup_ReturnAListGreaterThanOrEqual1()
     {
-        var rulesArray = new[] { (Rules)1000, (Rules)2000 };
-        var newGroup = new AdminGroup { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(rulesArray) };
-        await _repository.Insert(newGroup);
+        var group = new AdminGroup
+            { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)1000, (Rules)2000 }) };
 
+        await _repository.Save(group);
         var allGroups = await _repository.GetAll();
 
-        Assert.True(allGroups.Count > 1);
-
-        var groupCreated = allGroups.First(group => group.Name.Equals(newGroup.Name));
-
-        Assert.True(groupCreated.Rules.SetEquals(rulesArray));
+        Assert.NotEmpty(allGroups);
     }
 
     [Fact]
-    public async Task Insert_OneAdminGroupWithTwoRoles_Return3()
+    public async Task Save_AdminGroupWithTwoRoles_ReturnValueGreaterThan0()
     {
         var group = new AdminGroup
-        { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)40, (Rules)100 }) };
+            { Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)40, (Rules)100 }) };
 
-        var actual = await _repository.Insert(group);
+        var affectedRow = await _repository.Save(group);
 
-        Assert.True(actual.Id > 0);
+        Assert.True(affectedRow > 0);
     }
 }

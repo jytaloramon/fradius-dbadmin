@@ -1,5 +1,4 @@
 using FradminDomain.DTOs;
-using FradminDomain.SGBDs;
 using FradminDomain.UseCases;
 using FradminDomain.UseCases.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,6 @@ namespace Application.Controllers;
 [Route("[controller]")]
 public class RuleController : ControllerBase
 {
-
     private readonly IRuleUseCase _useCase;
 
     private readonly ILogger<RuleController> _logger;
@@ -21,7 +19,7 @@ public class RuleController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("rule/group")]
+    [HttpGet("/rules")]
     [ProducesResponseType(typeof(RuleGroupDto[]), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetRules()
     {
@@ -29,5 +27,4 @@ public class RuleController : ControllerBase
 
         return new OkObjectResult(rules);
     }
-
 }

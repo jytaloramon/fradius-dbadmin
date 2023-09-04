@@ -27,16 +27,18 @@ public class AdminGroupController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("/{id:int:range(1,32767)}")]
+    [HttpGet("/groups/{id}")]
     [ProducesResponseType(typeof(List<AdminGroupFullDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAdminGroup(short id)
+    public async Task<IActionResult> GetAdminGroup(int id)
     {
         var group = await _useCase.GetById(id);
 
-        return group != null ? new OkObjectResult(group) : new NotFoundObjectResult(new { msg = $"ID ({id}) not found" });
+        return group != null
+            ? new OkObjectResult(group)
+            : new NotFoundObjectResult(new { msg = $"ID ({id}) not found" });
     }
 
-    [HttpGet("/")]
+    [HttpGet("/groups")]
     [ProducesResponseType(typeof(List<AdminGroupFullDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAdminGroups()
     {
@@ -45,11 +47,11 @@ public class AdminGroupController : ControllerBase
         return new OkObjectResult(groups);
     }
 
-    [HttpPost("/")]
+    [HttpPost("/groups")]
     [ProducesResponseType(typeof(AdminGroupFullDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Add(AdminGroupNewDto adminGroupNewDto)
+    public async Task<IActionResult> AddAdminGroup(AdminGroupAddDto adminGroupDto)
     {
-        var createdAdminGroup = await _useCase.Add(adminGroupNewDto);
+        var createdAdminGroup = await _useCase.Add(adminGroupDto);
 
         return new OkObjectResult(createdAdminGroup);
     }

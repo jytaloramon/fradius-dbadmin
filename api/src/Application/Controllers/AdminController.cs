@@ -34,9 +34,9 @@ public class AdminController
 
     [HttpPost("/admins")]
     [ProducesResponseType(typeof(AdminFullDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> AddAdmin(AdminAddDto adminGroupNewDto)
+    public async Task<IActionResult> AddAdmin(AdminAddDto adminGroupDto)
     {
-        var createdAdminGroup = await _useCase.Add(adminGroupNewDto);
+        var createdAdminGroup = await _useCase.Add(adminGroupDto);
 
         return new OkObjectResult(createdAdminGroup);
     }

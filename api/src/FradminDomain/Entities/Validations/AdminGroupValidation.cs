@@ -10,7 +10,7 @@ public class AdminGroupValidation : AbstractValidator<AdminGroup>
         RuleSet("Id", () =>
         {
             RuleFor(group => group.Id)
-                .GreaterThan((short)0)
+                .GreaterThan(0)
                 .WithErrorCode(ErrorCatalog.OutOfRangeMin.Code)
                 .WithMessage(ErrorCatalog.OutOfRangeMin.Message);
         });

@@ -25,9 +25,10 @@ public class ExceptionHandlerMiddleware
             response.ContentType = "application/json";
 
             response.StatusCode = e switch
-            {
+            {   
+                UnsatisfiedDependencyException or EntityValidationException => (int)HttpStatusCode.BadRequest,
                 EntityConflictException => (int)HttpStatusCode.Conflict,
-                _ => response.StatusCode
+                _ => (int) HttpStatusCode.ServiceUnavailable
             };
 
             await response.WriteAsync(JsonSerializer.Serialize(e.Errors));

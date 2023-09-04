@@ -18,7 +18,7 @@ public class AdminGroupUseCaseUnitTests
         var factoryMock = new Mock<IAdminGroupFactory>();
 
         var repositoryMock = new Mock<IAdminGroupRepository>();
-        repositoryMock.Setup(repository => repository.GetById(It.IsAny<short>()))
+        repositoryMock.Setup(repository => repository.GetById(It.IsAny<int>()))
             .Throws(new GenericException(new Dictionary<string, object>() { ["message"] = "Test" }
                 .ToImmutableDictionary()));
 
@@ -48,12 +48,13 @@ public class AdminGroupUseCaseUnitTests
     [Fact]
     public async Task GetById_Found_ReturnTheEntity()
     {
-        var groupReturned = new AdminGroup { Id = 1000, Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)1 }) };
+        var groupReturned = new AdminGroup
+            { Id = 1000, Name = Guid.NewGuid().ToString()[..16], Rules = new HashSet<Rules>(new[] { (Rules)1 }) };
 
         var factoryMock = new Mock<IAdminGroupFactory>();
 
         var repositoryMock = new Mock<IAdminGroupRepository>();
-        repositoryMock.Setup(repository => repository.GetById(It.IsAny<short>()))
+        repositoryMock.Setup(repository => repository.GetById(It.IsAny<int>()))
             .Returns(Task.FromResult<AdminGroup?>(groupReturned));
 
         var useCase = new AdminGroupUseCase(factoryMock.Object, repositoryMock.Object);
@@ -86,16 +87,17 @@ public class AdminGroupUseCaseUnitTests
     [Fact]
     public async Task GetAll_WithNonEmptyList_ReturnAList()
     {
-        var groupsRepo = new List<AdminGroup>(){
-            new() { Id = 1000, Name = "1000", Rules = new HashSet<Rules>(){} },
-            new() { Id = 2000, Name = "2000", Rules = new HashSet<Rules>(){} },
+        var groupsRepo = new[]
+        {
+            new AdminGroup { Id = 1000, Name = "1000", Rules = new HashSet<Rules>() },
+            new AdminGroup { Id = 2000, Name = "2000", Rules = new HashSet<Rules>() },
         };
 
         var factoryMock = new Mock<IAdminGroupFactory>();
 
         var repositoryMock = new Mock<IAdminGroupRepository>();
         repositoryMock.Setup(repository => repository.GetAll())
-            .Returns(Task.FromResult(groupsRepo));
+            .Returns(Task.FromResult<IEnumerable<AdminGroup>>(groupsRepo));
 
         var useCase = new AdminGroupUseCase(factoryMock.Object, repositoryMock.Object);
 
@@ -120,21 +122,21 @@ public class AdminGroupUseCaseUnitTests
 
         var except = await Assert.ThrowsAsync<EntityValidationException>(async () =>
         {
-            await useCase.Add(new AdminGroupNewDto("", Array.Empty<Rules>()));
+            await useCase.Add(new AdminGroupAddDto("", Array.Empty<Rules>()));
         });
 
         Assert.True(except.Errors.ContainsKey("Name"));
     }
 
     [Fact]
-    public async Task Add_RepositoryInsertThrowGenericException_ThrowGenericException()
+    public async Task Add_RepositorySaveThrowGenericException_ThrowGenericException()
     {
         var factoryMock = new Mock<IAdminGroupFactory>();
         factoryMock.Setup(factory => factory.Create(It.IsAny<string>(), It.IsAny<HashSet<Rules>>()))
             .Returns(new AdminGroup { Name = "", Rules = new HashSet<Rules>() });
 
         var repositoryMock = new Mock<IAdminGroupRepository>();
-        repositoryMock.Setup(repository => repository.Insert(It.IsAny<AdminGroup>()))
+        repositoryMock.Setup(repository => repository.Save(It.IsAny<AdminGroup>()))
             .Throws(new GenericException(new Dictionary<string, object>() { ["message"] = "Test" }
                 .ToImmutableDictionary()));
 
@@ -142,31 +144,58 @@ public class AdminGroupUseCaseUnitTests
 
         var except = await Assert.ThrowsAsync<GenericException>(async () =>
         {
-            await useCase.Add(new AdminGroupNewDto("", Array.Empty<Rules>()));
+            await useCase.Add(new AdminGroupAddDto("", Array.Empty<Rules>()));
         });
 
         Assert.True(except.Errors.ContainsKey("message"));
     }
 
     [Fact]
-    public async Task Add_ValidEntity_ReturnTheEntityWithId1000()
+    public async Task Add_RepositorySaveReturn0_ThrowGenericException()
     {
-        const string name = "GroupTest";
-        var rules = new HashSet<Rules>(new[] { (Rules)1, (Rules)2 });
+        var groupValidMock = new AdminGroup { Name = "a", Rules = new HashSet<Rules>(new[] { (Rules)1, (Rules)2 }) };
 
         var factoryMock = new Mock<IAdminGroupFactory>();
         factoryMock.Setup(factory => factory.Create(It.IsAny<string>(), It.IsAny<HashSet<Rules>>()))
-            .Returns(new AdminGroup { Name = name, Rules = rules });
-
-        const short expectedId = 1000;
+            .Returns(groupValidMock);
 
         var repositoryMock = new Mock<IAdminGroupRepository>();
-        repositoryMock.Setup(repository => repository.Insert(It.IsAny<AdminGroup>()))
-            .Returns(Task.FromResult<AdminGroup>(new AdminGroup { Id = expectedId, Name = name, Rules = rules }));
+        repositoryMock.Setup(repository => repository.Save(It.IsAny<AdminGroup>()))
+            .Returns(Task.FromResult(0));
 
         var useCase = new AdminGroupUseCase(factoryMock.Object, repositoryMock.Object);
-        var adminGroup = await useCase.Add(new AdminGroupNewDto(name, rules.ToArray()));
 
-        Assert.Equal(expectedId, adminGroup.Id);
+        var except = await Assert.ThrowsAsync<GenericException>(async () =>
+        {
+            await useCase.Add(new AdminGroupAddDto(groupValidMock.Name, groupValidMock.Rules.ToArray()));
+        });
+
+        Assert.True(except.Errors.ContainsKey("message"));
+    }
+
+    [Fact]
+    public async Task Add_OkEntity_ReturnTheEntityCreated()
+    {
+        var groupValidMock = new AdminGroup { Name = "a", Rules = new HashSet<Rules>(new[] { (Rules)1, (Rules)2 }) };
+        var groupCreatedMock = new AdminGroup
+            { Id = 1000, Name = "a", Rules = new HashSet<Rules>(new[] { (Rules)1, (Rules)2 }) };
+
+        var factoryMock = new Mock<IAdminGroupFactory>();
+        factoryMock.Setup(factory => factory.Create(It.IsAny<string>(), It.IsAny<HashSet<Rules>>()))
+            .Returns(groupValidMock);
+
+        var repositoryMock = new Mock<IAdminGroupRepository>();
+        repositoryMock.Setup(repository => repository.Save(groupValidMock))
+            .Returns(Task.FromResult(1));
+        repositoryMock.Setup(repository => repository.GetByName("a"))
+            .Returns(Task.FromResult<AdminGroup?>(groupCreatedMock));
+
+        var useCase = new AdminGroupUseCase(factoryMock.Object, repositoryMock.Object);
+
+        var adminGroup = await useCase.Add(new AdminGroupAddDto(groupValidMock.Name, groupValidMock.Rules.ToArray()));
+
+        Assert.Equal(groupCreatedMock.Id, adminGroup.Id);
+        Assert.Equal(groupCreatedMock.Name, adminGroup.Name);
+        Assert.True(groupCreatedMock.Rules.SetEquals(adminGroup.Rules));
     }
 }
