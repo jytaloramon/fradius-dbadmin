@@ -14,6 +14,7 @@
       <slot name="table-foot"></slot>
     </table>
 
+    <!--
     <div class="flex justify-center">
       <div v-if="pagination!.max > 1" class="mt-6 py-2 flex border-2 border-gray-500 rounded-lg text-xs">
         <button-pagination-pass-table :button-desc="{ label: '<< Anterior', disable: pagination!.actual <= 1 }"
@@ -26,10 +27,12 @@
           </li>
         </ul>
 
+        
         <button-pagination-pass-table
           :button-desc="{ label: 'Próxima >>', disable: pagination!.actual >= pagination!.max }" class="border-l" />
       </div>
     </div>
+    -->
   </div>
 </template>
 
