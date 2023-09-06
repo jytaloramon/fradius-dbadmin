@@ -1,13 +1,8 @@
 <template>
-  <button class="flex w-full p-3 justify-center text-base text-white bg-green-600 rounded-lg">
-    <span>
-      <font-awesome-icon :icon="buttonDesc.icon.icon" :size="buttonDesc.icon.size" :rotate="buttonDesc.icon.rotate"
-        :color="buttonDesc.icon.color" />
-    </span>
-
-    <span class="ml-3">{{ buttonDesc.label }}</span>
-
+  <button :disabled="description.isDisabled"
+    class="py-2 px-4 text-green-600 border border-green-600 rounded-md hover:shadow-md">
     <slot></slot>
+    <span>{{ description.label }}</span>
   </button>
 </template>
 
@@ -17,12 +12,7 @@ import { defineComponent, type PropType } from 'vue';
 
 export interface IAppButton {
   label: string;
-  icon: {
-    icon: string;
-    size?: string;
-    rotate?: string;
-    color?: string;
-  };
+  isDisabled?: boolean
 }
 
 
@@ -30,7 +20,7 @@ export default defineComponent({
   name: 'AppButton',
 
   props: {
-    buttonDesc: {
+    description: {
       type: Object as PropType<IAppButton>,
       required: true
     }

@@ -1,6 +1,6 @@
 <template>
-  <app-box>
-    <div class="">
+  <app-box class="text-sm">
+    <div>
       <p class="float-left font-semibold">{{ title }}</p>
 
       <a class="float-right cursor-pointer" @click="$emit('closeBox')">

@@ -1,18 +1,11 @@
 <template>
   <div class="flex md:h-[576px] py-4">
-    <app-box :title="'Lista de Usuários'" class="w-1/2 md:h-[560px]">
+    <app-box class="w-1/2 md:h-[560px]">
       <div>
         <div class="inline-block">
           <span class="text-base">Lista de Usuários</span>
           <span class="ml-3">&lt;</span>
           <span class="ml-2">&gt;</span>
-        </div>
-
-        <div class="float-right">
-          <button class="px-3 py-1 text-sm border rounded-md">
-            <font-awesome-icon icon="fa-solid fa-rotate-left" size="sm" />
-            atualizar
-          </button>
         </div>
       </div>
 
@@ -37,10 +30,10 @@
     </app-box>
 
     <app-box class="flex flex-col justify-between w-1/2 md:h-[560px] ml-6 overflow-y-auto overflow-x-auto">
-      <div class="text-sm">
+      <form class="text-sm">
         <div class="mb-4">
           <div class="font-semibold">
-            <label for="">{{ $t('label.group') }}: </label>
+            <label>{{ $t('label.group') }}: </label>
             <input class="focus:outline-none" type="text" value="Grupo 1">
             <p class="inline-block float-right py-0.5 px-2 text-xs text-slate-50 bg-red-500 rounded-md">
               Alterado: Grupo 1
@@ -102,11 +95,23 @@
             </app-table>
           </div>
         </div>
-      </div>
+      </form>
 
-      <div class="mt-8">
-        <button-with-loading
-          :button-with-loading-desc="{ label: 'Salvar', icon: { icon: 'fa-solid fa-floppy-disk' }, isLoading: adminGroupOpen.isChanged }" />
+      <div class="flex justify-between mt-8">
+        <div>
+          <button-square
+            :description="{ label: 'Excluir', icon: 'fa-solid fa-trash', style: { borderColor: 'border-red-500' } }"
+            class="text-red-500" @click="() => { console.log('Click excluir') }" />
+
+          <button-square
+            :description="{ label: 'Restaurar', icon: 'fa-solid fa-rotate-left', style: { borderColor: 'border-green-600' } }"
+            class="ml-4 text-green-600" @click="() => { console.log('Click restaurar') }" />
+        </div>
+
+        <div class="">
+          <button-with-icon
+            :description="{ label: 'Salvar', icon: { icon: 'fa-solid fa-floppy-disk' }, isDisabled: false }" />
+        </div>
       </div>
     </app-box>
   </div>
@@ -117,8 +122,9 @@ import { defineComponent } from 'vue';
 import { menuItemStore } from '@/stores/menu-item-store';
 import AppBox from '@/components/boxes/AppBox.vue';
 import AppTable from '@/components/table/AppTable.vue';
-import ButtonWithLoading from '@/components/buttons/ButtonWithLoading.vue';
+import ButtonWithIcon from '@/components/buttons/ButtonWithIcon.vue';
 import CheckboxWithSquareIcon from '@/components/inputs/CheckboxWithSquareIcon.vue';
+import ButtonSquare from '@/components/buttons/ButtonSquare.vue';
 import Table from '@/models/Table';
 import TableHeadItemWithSort from '@/components/table/TableHeadItemWithSort.vue';
 
@@ -143,7 +149,7 @@ interface IRuleGroup {
 export default defineComponent({
   name: 'ManagementGroupPage',
 
-  components: { AppBox, AppTable, ButtonWithLoading, CheckboxWithSquareIcon, TableHeadItemWithSort },
+  components: { AppBox, AppTable, ButtonWithIcon, CheckboxWithSquareIcon, ButtonSquare, TableHeadItemWithSort },
 
   data() {
     return {

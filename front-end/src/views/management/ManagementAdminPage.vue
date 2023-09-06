@@ -7,13 +7,6 @@
           <span class="ml-3">&lt;</span>
           <span class="ml-2">&gt;</span>
         </div>
-
-        <div class="float-right">
-          <button class="px-3 py-1 text-sm border rounded-md">
-            <font-awesome-icon icon="fa-solid fa-rotate-left" size="sm" />
-            atualizar
-          </button>
-        </div>
       </div>
 
       <div>
@@ -36,24 +29,19 @@
 
           <template v-slot:body>
             <tr v-for="(user, idx) in tableData.getItems()" :key="idx" class="border-b even:bg-white odd:bg-slate-100">
-              <td class="p-3">
+              <td class="py-2 px-3">
                 <checkbox-with-square-icon class="mt-2" :is-checked-input="tableData.getCheckedIndexes().has(idx)" />
               </td>
-              <td class="p-3">#{{ user.id }}</td>
-              <td class="p-3">
-                <div class="flex">
-                  <img class="w-6 h-6 rounded-full" src="/Ramon-Editia.jpg" alt="profile picture">
-                  <p class="ml-2">@{{ user.username }}</p>
-                </div>
-              </td>
-              <td class="p-3">{{ user.email }}</td>
-              <td class="p-3">{{ user.group }}</td>
-              <td class="p-3">
+              <td class="py-2 px-3">#{{ user.id }}</td>
+              <td class="py-2 px-3">@{{ user.username }}</td>
+              <td class="py-2 px-3">{{ user.email }}</td>
+              <td class="py-2 px-3">{{ user.group }}</td>
+              <td class="py-2 px-3">
                 <span class="bg-amber-200 font-semibold text-amber-800 text-xs py-1 px-2 rounded-md">
                   {{ user.lastAccess }}
                 </span>
               </td>
-              <td class="p-3">
+              <td class="py-2 px-3">
                 <span v-if="user.isActive"
                   class="bg-green-200 font-semibold text-green-800 text-xs py-1 px-2 rounded-md">Ativo</span>
                 <span v-else class="bg-red-200 font-semibold text-red-800 text-xs py-1 px-2 rounded-md">Inativo</span>
@@ -66,7 +54,7 @@
 
     <box-with-close-button v-if="isFormVisible" :title="'Administrador'"
       class="w-1/2 ml-6 md:h-[560px] overflow-y-auto overflow-x-auto" @closeBox="() => isFormVisible = false">
-      <p class="text-sm pb-5 border-b border-gray-50">Adicione um novo administrador</p>
+      <p class="pb-4 border-b border-dashed border-gray-300">Adicione um novo administrador</p>
 
       <form class="mt-4">
         <div class="pb-7 border-b">
@@ -103,8 +91,10 @@
           </div>
         </div>
 
-        <button-with-loading class="mt-8"
-          :button-with-loading-desc="{ label: 'Criar', icon: { icon: 'fa-solid fa-plus' } }" />
+        <div class="mt-8">
+          <button-with-icon-large class="w-full text-white bg-green-600 border-0 "
+            :description="{ label: 'Salvar', icon: { icon: 'fa-solid fa-plus' }, isDisabled: false }" />
+        </div>
       </form>
     </box-with-close-button>
   </div>
@@ -116,7 +106,7 @@ import { menuItemStore } from '@/stores/menu-item-store';
 import AppBox from '@/components/boxes/AppBox.vue';
 import AppTable from '@/components/table/AppTable.vue';
 import BoxWithCloseButton from '@/components/boxes/BoxWithCloseButton.vue';
-import ButtonWithLoading from '@/components/buttons/ButtonWithLoading.vue';
+import ButtonWithIconLarge from '@/components/buttons/ButtonWithIconLarge.vue';
 import CheckboxWithLessIcon from '@/components/inputs/CheckboxWithLessIcon.vue';
 import CheckboxWithSquareIcon from '@/components/inputs/CheckboxWithSquareIcon.vue';
 import InputRadio from '@/components/inputs/InputRadio.vue';
@@ -124,7 +114,6 @@ import InputTextWithLeftIcon from '@/components/inputs/InputTextWithLeftIcon.vue
 import Table from '@/models/Table';
 import SelectWithLeftIcon from '@/components/inputs/SelectWithLeftIcon.vue';
 import TableHeadItemWithSort from '@/components/table/TableHeadItemWithSort.vue';
-
 
 
 interface IUser {
@@ -139,7 +128,7 @@ interface IUser {
 export default defineComponent({
   name: 'ManagementAdminPage',
 
-  components: { AppBox, AppTable, BoxWithCloseButton, ButtonWithLoading, CheckboxWithLessIcon, CheckboxWithSquareIcon, InputRadio, InputTextWithLeftIcon, SelectWithLeftIcon, TableHeadItemWithSort },
+  components: { AppBox, AppTable, BoxWithCloseButton, ButtonWithIconLarge, CheckboxWithLessIcon, CheckboxWithSquareIcon, InputRadio, InputTextWithLeftIcon, SelectWithLeftIcon, TableHeadItemWithSort },
 
   data() {
     return {
