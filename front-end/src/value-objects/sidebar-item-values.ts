@@ -6,7 +6,7 @@ const sideBarItemsValue: { [key: string]: IItemSideBarComum | IItemSideBarWithSu
     key: 'users',
     icon: 'fa-regular fa-user',
     items: [
-      { key: 'list', icon: 'fa-solid fa-list', path: '/users' },
+      { key: 'list', icon: 'fa-solid fa-list', path: '/user' },
       { key: 'add', icon: 'fa-solid fa-user-plus', path: '/add' }
     ]
   },

@@ -1,7 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import { faUser, faBell } from '@fortawesome/free-regular-svg-icons';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
 import {
   faChartLine,
   faArrowUpFromBracket,
@@ -25,7 +25,10 @@ import {
   faPlus,
   faXmark,
   faFloppyDisk,
-  faEraser
+  faEraser,
+  faGlobe,
+  faHeartPulse,
+  faSkull
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -37,7 +40,6 @@ library.add(
   faPenToSquare,
   faNetworkWired,
   faChevronDown,
-  faBell,
   faList,
   faUserPlus,
   faTriangleExclamation,
@@ -53,7 +55,10 @@ library.add(
   faPlus,
   faXmark,
   faFloppyDisk,
-  faEraser
+  faEraser,
+  faGlobe,
+  faHeartPulse,
+  faSkull
 );
 
 export default FontAwesomeIcon;
