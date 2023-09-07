@@ -1,7 +1,6 @@
 <template>
   <input type="checkbox" :checked="isCheckedInput"
-    class="w-[14px] h-[14px] appearance-none bg-white rounded-[2px] border-[2px] border-gray-700 hover:cursor-pointer after:w-2 after:block checked:after:bg-gray-700 after:h-2 after:ml-[1px] after:mt-[1px]"
-    @change="e => $emit('inputChanged', e.target?.checked)">
+    class="w-[14px] h-[14px] appearance-none bg-white rounded-[2px] border-[2px] border-gray-700 hover:cursor-pointer after:w-2 after:block checked:after:bg-gray-700 after:h-2 after:ml-[1px] after:mt-[1px]">
 </template>
 
 <script lang="ts">

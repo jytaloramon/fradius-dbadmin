@@ -1,6 +1,6 @@
 <template>
   <div class="flex md:h-[576px] py-4">
-    <app-box class="w-1/2 md:h-[560px]">
+    <app-box :class="style.boxList">
       <div>
         <div class="inline-block">
           <span class="text-base">Lista de Usuários</span>
@@ -52,8 +52,8 @@
       </div>
     </app-box>
 
-    <box-with-close-button v-if="isFormVisible" :title="'Administrador'"
-      class="w-1/2 ml-6 md:h-[560px] overflow-y-auto overflow-x-auto" @closeBox="() => isFormVisible = false">
+    <box-with-close-button v-if="form.isVisible" :title="'Administrador'"
+      class="w-1/2 ml-6 md:h-full overflow-y-auto overflow-x-auto" @closeBox="formClose">
       <p class="pb-4 border-b border-dashed border-gray-300">Adicione um novo administrador</p>
 
       <form class="mt-4">
@@ -61,17 +61,15 @@
           <p class="font-semibold">Conta</p>
 
           <input-text-with-left-icon
-            :input-desc="{ label: 'Usuário', placeholder: 'ramon04', data: { value: '' }, icon: 'fa-regular fa-user' }"></input-text-with-left-icon>
+            :input-desc="{ label: 'Usuário', placeholder: 'ramon04', data: form.field.username, icon: 'fa-regular fa-user' }"
+            @inputChanged="formFieldSetUsername" />
 
           <input-text-with-left-icon class="mt-3"
-            :input-desc="{ label: 'E-mail', type: 'email', placeholder: 'mary@email.com', data: { value: '' }, icon: 'fa-solid fa-envelope' }"></input-text-with-left-icon>
+            :input-desc="{ label: 'E-mail', type: 'email', placeholder: 'mary@email.com', data: form.field.email, icon: 'fa-solid fa-envelope' }"
+            @inputChanged="formFieldSetEmail" />
 
           <select-with-left-icon
             :select-desc="{ label: 'Grupo', icon: 'fa-solid fa-layer-group', data: ['Grupo 1', 'Grupo 2'] }"
-            class="mt-3" />
-
-          <select-with-left-icon
-            :select-desc="{ label: 'Status', icon: 'fa-solid fa-layer-group', data: ['Ativado', 'Desativado'] }"
             class="mt-3" />
         </div>
 
@@ -80,17 +78,19 @@
 
           <div class="mt-3">
             <input-radio :input-desc="{ label: 'Automático', group: 'password', value: 'auto', isChecked: true }"
-              class="inline ml-1" @inputChanged="inputRadioChanged" />
+              class="inline ml-1" @inputChanged="formSetPaswordMode" />
 
             <input-radio :input-desc="{ label: 'Manual', group: 'password', value: 'manual' }" class="inline ml-8"
-              @inputChanged="inputRadioChanged" />
+              @inputChanged="formSetPaswordMode" />
 
-            <div v-if="actualPasswordChecked === 'manual'" class="mt-2">
+            <div v-if="form.passwordMode === 'manual'" class="mt-2">
               <input-text-with-left-icon
-                :input-desc="{ label: 'Senha', type: 'password', placeholder: '**** ****', data: { value: '' }, icon: 'fa-solid fa-lock' }"></input-text-with-left-icon>
+                :input-desc="{ label: 'Senha', type: 'password', placeholder: '**** ****', data: form.field.password, icon: 'fa-solid fa-lock' }"
+                @inputChanged="formFieldSetPassword" />
 
               <input-text-with-left-icon class="mt-3"
-                :input-desc="{ label: 'Confirme', type: 'password', placeholder: '**** ****', data: { value: '' }, icon: 'fa-solid fa-lock' }"></input-text-with-left-icon>
+                :input-desc="{ label: 'Confirme', type: 'password', placeholder: '**** ****', data: form.field.passwordCheck, icon: 'fa-solid fa-lock' }"
+                @inputChanged="formFieldSetPasswordCheck" />
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ import SelectWithLeftIcon from '@/components/inputs/SelectWithLeftIcon.vue';
 import TableHeadItemWithSort from '@/components/table/TableHeadItemWithSort.vue';
 
 
-interface IUser {
+interface IAdmin {
   id: number;
   username: string;
   email: string;
@@ -130,6 +130,7 @@ interface IUser {
   isActive: boolean;
 }
 
+
 export default defineComponent({
   name: 'ManagementAdminPage',
 
@@ -137,10 +138,34 @@ export default defineComponent({
 
   data() {
     return {
+      style: {
+        boxList: ''
+      },
       menuStore: menuItemStore(),
-      tableData: new Table<IUser>(),
-      actualPasswordChecked: 'auto',
-      isFormVisible: true
+      tableData: new Table<IAdmin>(),
+      form: {
+        isVisible: false,
+        passwordMode: '',
+        field: {
+          username: {
+            value: '',
+            error: '',
+          },
+          email: {
+            value: '',
+            error: '',
+          },
+          password: {
+            value: '',
+            error: '',
+          },
+          passwordCheck: {
+            value: '',
+            error: '',
+          },
+          groupId: 0,
+        }
+      }
     };
   },
 
@@ -154,13 +179,42 @@ export default defineComponent({
       { id: 4, username: 'jamon04', email: 'ramongoncalves76@gmail.com', group: 'admin', lastAccess: 'Há uma semana', isActive: true },
       { id: 5, username: 'ddsramon04', email: 'ramongoncalves76@gmail.com', group: 'admin', lastAccess: 'Hoje', isActive: false },
     ]);
+
+    this.formOpen();
   },
 
   methods: {
-    inputRadioChanged(value: string): void {
-      if (value === this.actualPasswordChecked) return;
+    formClose(): void {
+      this.form.isVisible = false;
+      this.style.boxList = 'w-full md:h-full'
+    },
+    formOpen(admin?: IAdmin): void {
+      if (!admin) this.formSetValues();
 
-      this.actualPasswordChecked = value;
+      this.form.isVisible = true;
+      this.style.boxList = 'w-1/2 md:h-full'
+    },
+    formSetValues() {
+      this.form.field.username.value = '';
+      this.form.field.email.value = '';
+      this.form.field.groupId = 0;
+      this.form.field.password.value = '';
+      this.form.field.passwordCheck.value = '';
+    },
+    formSetPaswordMode(mode: string): void {
+      this.form.passwordMode = mode
+    },
+    formFieldSetUsername(username: string): void {
+      this.form.field.username.value = username;
+    },
+    formFieldSetEmail(email: string): void {
+      this.form.field.email.value = email;
+    },
+    formFieldSetPassword(password: string): void {
+      this.form.field.password.value = password;
+    },
+    formFieldSetPasswordCheck(passwordCheck: string): void {
+      this.form.field.passwordCheck.value = passwordCheck;
     }
   }
 });
