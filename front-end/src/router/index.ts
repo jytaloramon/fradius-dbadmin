@@ -7,6 +7,7 @@ import AccountRecoveryPage from '@/views/account/AccountRecoveryPage.vue';
 
 import MainPage from '@/views/MainPage.vue';
 import UserPage from '@/views/user/UserPage.vue';
+import UserAddPage from '@/views/user/UserAddPage.vue';
 import UserListPage from '@/views/user/UserListPage.vue';
 import ManagementPage from '@/views/management/ManagementPage.vue';
 import ManagementAdminPage from '@/views/management/ManagementAdminPage.vue';
@@ -43,7 +44,7 @@ const router = createRouter({
           component: UserPage,
           children: [
             { path: '', component: UserListPage },
-            { path: '/add', component: UserPage }
+            { path: 'add', component: UserAddPage }
           ]
         }
       ]

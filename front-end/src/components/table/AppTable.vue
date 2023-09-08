@@ -11,7 +11,7 @@
         <slot name="body"></slot>
       </tbody>
 
-      <slot name="table-foot"></slot>
+      <slot name="foot"></slot>
     </table>
 
     <!--
