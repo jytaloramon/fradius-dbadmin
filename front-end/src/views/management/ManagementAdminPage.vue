@@ -1,6 +1,6 @@
 <template>
-  <div class="flex md:h-[576px] py-4">
-    <app-box :class="style.boxList">
+  <div class="flex flex-col md:flex-row md:h-[600px] py-4">
+    <app-box :class="getClassDivTable">
       <div>
         <div class="inline-block">
           <span class="text-base">Lista de Usuários</span>
@@ -9,8 +9,8 @@
         </div>
       </div>
 
-      <div>
-        <app-table class="mt-8" :pagination="{ actual: 1, max: 2 }">
+      <div class="mt-8 overflow-y-auto overflow-x-auto">
+        <app-table :pagination="{ actual: 1, max: 2 }">
           <template v-slot:head>
             <th class="py-2 px-3">
               <checkbox-with-less-icon v-if="tableData.getCheckedIndexes().size < tableData.getItems().length"
@@ -53,7 +53,7 @@
     </app-box>
 
     <box-with-close-button v-if="form.isVisible" :title="'Administrador'"
-      class="w-1/2 ml-6 md:h-full overflow-y-auto overflow-x-auto" @closeBox="formClose">
+      class="w-full md:1/2 md:h-full mt-6 md:mt-0 md:ml-6 overflow-y-auto overflow-x-auto" @closeBox="formClose">
       <p class="pb-4 border-b border-dashed border-gray-300">Adicione um novo administrador</p>
 
       <form class="mt-4">
@@ -186,13 +186,11 @@ export default defineComponent({
   methods: {
     formClose(): void {
       this.form.isVisible = false;
-      this.style.boxList = 'w-full md:h-full'
     },
     formOpen(admin?: IAdmin): void {
       if (!admin) this.formSetValues();
 
       this.form.isVisible = true;
-      this.style.boxList = 'w-1/2 md:h-full'
     },
     formSetValues() {
       this.form.field.username.value = '';
@@ -215,6 +213,14 @@ export default defineComponent({
     },
     formFieldSetPasswordCheck(passwordCheck: string): void {
       this.form.field.passwordCheck.value = passwordCheck;
+    }
+  },
+
+  computed: {
+    getClassDivTable(): string {
+      const complementClass = this.form.isVisible ? 'md:w-1/2' : 'md:w-full'
+
+      return `w-full h-80 md:h-full ${complementClass}`;
     }
   }
 });

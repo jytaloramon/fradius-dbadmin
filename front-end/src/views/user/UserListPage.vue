@@ -1,8 +1,8 @@
 <template>
-  <div class="md:h-[576px] py-4">
+  <div class="flex flex-col md:h-[600px] py-4">
     <app-box class="w-full">
-      <ul class="grid grid-cols-4">
-        <li v-for="(item, idx) in geralInfo" :key="idx" class="flex text-sm text-pink-500">
+      <ul class="grid grid-cols-2 lg:grid-cols-4">
+        <li v-for="(item, idx) in geralInfo" :key="idx" class="flex my-4 text-sm text-pink-500">
           <div class="flex flex-col justify-center w-12 h-12 text-white bg-pink-500 rounded-md">
             <font-awesome-icon :icon="item.icon" />
           </div>
@@ -14,7 +14,7 @@
       </ul>
     </app-box>
 
-    <app-box class="w-full mt-4 md:h-[430px]">
+    <app-box class="w-full mt-4 md:h-[410px]">
       <div>
         <div class="inline-block">
           <span class="text-base">Lista de Usuários</span>
@@ -23,8 +23,8 @@
         </div>
       </div>
 
-      <div class="overflow-y-auto">
-        <app-table class="mt-8 " :pagination="{ actual: 1, max: 2 }">
+      <div class="mt-8 overflow-y-auto overflow-x-auto">
+        <app-table :pagination="{ actual: 1, max: 2 }">
           <template v-slot:head>
             <th class="py-2 px-3">
               <checkbox-with-less-icon v-if="tableData.getCheckedIndexes().size < tableData.getItems().length"

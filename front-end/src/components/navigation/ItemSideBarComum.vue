@@ -1,7 +1,7 @@
 <template>
   <li :class="classType[itemDesc.key === itemStored.getActualItemSelected.key ? 1 : 0]">
     <RouterLink :to="itemDesc.path">
-      <span><font-awesome-icon :icon="itemDesc.icon" /></span>
+      <font-awesome-icon :icon="itemDesc.icon" />
       <span class="ml-2">{{ $t(`label.${itemDesc.key}`) }}</span>
     </RouterLink>
   </li>
@@ -26,7 +26,7 @@ export default defineComponent({
   data() {
     return {
       itemStored: menuItemStore(),
-      classType: ['flex justify-between py-2 px-3 mt-2', 'flex justify-between py-2 px-3 mt-2 text-pink-700 bg-gradient-to-r from-pink-50 border-l-2 border-pink-700']
+      classType: ['w-full flex justify-between py-2 px-3 mt-2', 'flex justify-between py-2 px-3 mt-2 text-pink-700 bg-gradient-to-r from-pink-50 border-l-2 border-pink-700']
     };
   }
 });

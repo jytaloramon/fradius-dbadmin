@@ -4,6 +4,8 @@ import AccountPage from '@/views/account/AccountPage.vue';
 import AccountSigninPage from '@/views/account/AccountSigninPage.vue';
 import AccountRecoveryPage from '@/views/account/AccountRecoveryPage.vue';
 
+
+import MainPage from '@/views/MainPage.vue';
 import UserPage from '@/views/user/UserPage.vue';
 import UserListPage from '@/views/user/UserListPage.vue';
 import ManagementPage from '@/views/management/ManagementPage.vue';
@@ -23,22 +25,29 @@ const router = createRouter({
       ]
     },
     {
-      path: '/management',
-      component: ManagementPage,
+      path: '/',
+      component: MainPage,
       redirect: '',
       children: [
-        { path: 'admin', component: ManagementAdminPage },
-        { path: 'group', component: ManagementGroupPage }
+        {
+          path: '/management',
+          component: ManagementPage,
+          redirect: '',
+          children: [
+            { path: 'admin', component: ManagementAdminPage },
+            { path: 'group', component: ManagementGroupPage }
+          ]
+        },
+        {
+          path: '/user',
+          component: UserPage,
+          children: [
+            { path: '', component: UserListPage },
+            { path: '/add', component: UserPage }
+          ]
+        }
       ]
     },
-    {
-      path: '/user',
-      component: UserPage,
-      children: [
-        { path: '', component: UserListPage },
-        { path: '/add', component: UserPage }
-      ]
-    }
   ]
 });
 

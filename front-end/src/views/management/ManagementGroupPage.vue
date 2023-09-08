@@ -1,6 +1,6 @@
 <template>
-  <div class="flex md:h-[576px] py-4">
-    <app-box class="w-1/2 md:h-[560px]">
+  <div class="flex flex-col md:flex-row md:h-[600px] py-4">
+    <app-box class="w-full h-80 md:h-full md:w-1/2">
       <div>
         <div class="inline-block">
           <span class="text-base">Lista de Usuários</span>
@@ -29,7 +29,8 @@
       </div>
     </app-box>
 
-    <app-box class="flex flex-col justify-between w-1/2 md:h-[560px] ml-6 overflow-y-auto overflow-x-auto">
+    <app-box
+      class="flex flex-col justify-between w-full md:w-1/2 md:h-full mt-6 md:mt-0 md:ml-6 overflow-y-auto overflow-x-auto">
       <form class="text-sm">
         <div class="mb-4">
           <div class="font-semibold">

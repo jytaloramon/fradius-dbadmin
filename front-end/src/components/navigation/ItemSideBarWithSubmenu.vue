@@ -1,8 +1,8 @@
 <template>
-  <li>
+  <li class="w-full">
     <div :class="classType.item[itemDesc.key === itemStored.getActualItemSelected.key ? 1 : 0]">
       <a class="cursor-pointer">
-        <span><font-awesome-icon :icon="itemDesc.icon" /></span>
+        <font-awesome-icon :icon="itemDesc.icon" />
         <span class="ml-3">{{ $t(`label.${itemDesc.key}`) }}</span>
       </a>
 
