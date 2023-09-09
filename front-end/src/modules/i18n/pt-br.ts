@@ -3,6 +3,7 @@ const i18nPtBr = {
     admin: 'Admin',
     add: 'Adicionar',
     dashboard: 'Dashboard',
+    delete: 'Excluir',
     exit: 'Sair',
     fillIn: 'Preencha',
     forgotYourPassword: 'Esqueceu sua senha',
@@ -13,7 +14,10 @@ const i18nPtBr = {
     management: 'Gerenciamento',
     merger: 'Mesclar',
     nas: 'NAS',
+    restore: 'Restaurar',
+    status: 'Status',
     user: 'Usuário',
+    userList: 'Lista de Usuários',
     users: 'Usuários',
     view: 'Visualizar',
   },
@@ -26,6 +30,7 @@ const i18nPtBr = {
     Um e-mail será enviado a você contendo as instruções para a recuperação \
     da sua senha.',
     backToLogin: 'Faça login em vez disso',
+    groupSettingSubTitle: 'Configure permissões/usuários deste grupo.'
   }
 };
 

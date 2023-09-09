@@ -1,5 +1,5 @@
 <template>
-  <table class="w-full table-auto text-sm">
+  <table class="w-full table-auto text-sm text-left">
     <thead class="text-gray-600">
       <tr class="border-y">
         <slot name="head"></slot>
@@ -17,8 +17,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-
 export default defineComponent({
-  name: 'AppTable',
+  name: 'TableSimple',
 });
 </script>

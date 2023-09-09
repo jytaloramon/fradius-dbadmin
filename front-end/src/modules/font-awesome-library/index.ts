@@ -28,7 +28,8 @@ import {
   faEraser,
   faGlobe,
   faHeartPulse,
-  faSkull
+  faSkull,
+  faCaretUp,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -58,7 +59,8 @@ library.add(
   faEraser,
   faGlobe,
   faHeartPulse,
-  faSkull
+  faSkull,
+  faCaretUp
 );
 
 export default FontAwesomeIcon;
