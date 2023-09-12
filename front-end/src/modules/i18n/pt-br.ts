@@ -5,6 +5,7 @@ const i18nPtBr = {
     dashboard: 'Dashboard',
     delete: 'Excluir',
     exit: 'Sair',
+    edit: 'Editar',
     fillIn: 'Preencha',
     forgotYourPassword: 'Esqueceu sua senha',
     group: 'Grupo',
@@ -20,6 +21,7 @@ const i18nPtBr = {
     userList: 'Lista de Usuários',
     users: 'Usuários',
     view: 'Visualizar',
+    new: 'Novo'
   },
   message: {
     indexOutOfRange: 'Índice fora do intervalo, compreendido como (min: {min}) e (max: {max}) ',

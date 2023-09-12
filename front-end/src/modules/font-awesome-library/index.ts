@@ -30,6 +30,7 @@ import {
   faHeartPulse,
   faSkull,
   faCaretUp,
+  faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -60,7 +61,8 @@ library.add(
   faGlobe,
   faHeartPulse,
   faSkull,
-  faCaretUp
+  faCaretUp,
+  faCheck
 );
 
 export default FontAwesomeIcon;
